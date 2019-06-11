@@ -1,0 +1,22 @@
+{
+  "name": "H+",
+  "short_name": "H+",
+  "description": "The official schedule app.",
+  "start_url": "../index.html",
+  "background_color": "#79abd2",
+  "theme_color": "#79abd2",
+  "display": "standalone",
+  "orientation": "natural",
+  "icons": [
+    {
+      "src": "../images/icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "../images/icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
