@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2019 Nadav Tasher
+ * https://github.com/NadavTasher/WebAppBase/
+ **/
+
 function animate(v, from, to, seconds, property, callback = null) {
     let view = get(v);
     view.style.removeProperty(property);

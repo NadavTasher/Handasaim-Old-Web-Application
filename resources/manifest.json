@@ -3,8 +3,8 @@
   "short_name": "H+",
   "description": "The official schedule app.",
   "start_url": "../index.html",
-  "background_color": "#79abd2",
-  "theme_color": "#79abd2",
+  "background_color": "#00649c",
+  "theme_color": "#00649c",
   "display": "standalone",
   "orientation": "natural",
   "icons": [

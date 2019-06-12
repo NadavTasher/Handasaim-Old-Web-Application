@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2019 Nadav Tasher
+ * https://github.com/NadavTasher/WebAppBase/
+ **/
+
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open('v1').then(function (cache) {
