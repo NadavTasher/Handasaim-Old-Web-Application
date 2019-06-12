@@ -89,6 +89,35 @@ body {
     transition: all ease 1s;
 }
 
+#mobile-schedule-subjects > div > p {
+    direction: rtl;
+    text-align: right;
+    text-align-last: right;
+}
+
+#mobile-switcher-grades > div {
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#mobile-switcher-grades > div > * {
+    width: 100%;
+}
+
+#mobile-schedule-dashboard {
+    flex-direction: row;
+    justify-content: center;
+}
+
+#mobile-schedule-dashboard-message {
+    width: 100%;
+}
+
+#mobile-schedule-dashboard-classname {
+    color: #FFF;
+    font-size: 200%;
+}
+
 #mobile-icons {
     height: inherit;
     padding: 1vh;

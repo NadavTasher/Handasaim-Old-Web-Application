@@ -48,6 +48,8 @@ function crossplatform_messages_load(schedule, v) {
         } else {
             hide(view);
         }
+    } else {
+        hide(view);
     }
 }
 
@@ -148,29 +150,31 @@ function mobile_load() {
     view("mobile");
     mobile_schedule_load();
     schedule_load((schedule) => {
-        crossplatform_messages_load(schedule, "mobile-schedule-message");
+        crossplatform_messages_load(schedule, "mobile-schedule-dashboard-message");
 
         if (schedule.hasOwnProperty("classrooms")) {
             for (let c = 0; c < schedule.classrooms.length; c++) {
                 let classroom = schedule.classrooms[c];
                 if (classroom.hasOwnProperty("grade")) {
-                    let button = document.createElement("button");
-                    button.onclick = () => {
-                        gestures();
-                        mobile_switcher_classroom(classroom.name);
-                        slide("mobile-switcher", false, false, () => {
-                            view("mobile-schedule");
-                            slide("mobile-schedule", true, true, mobile_schedule_load);
-                        });
-                    };
-                    button.innerHTML = classroom.name;
-                    get("mobile-switcher-grade-" + classroom.grade).appendChild(button);
+                    if (classroom.hasOwnProperty("name")) {
+                        let button = document.createElement("button");
+                        button.onclick = () => {
+                            gestures();
+                            mobile_switcher_classroom(schedule, classroom.name);
+                            slide("mobile-switcher", false, false, () => {
+                                view("mobile-schedule");
+                                slide("mobile-schedule", true, true, mobile_schedule_load);
+                            });
+                        };
+                        button.innerHTML = classroom.name;
+                        get("mobile-switcher-grade-" + classroom.grade).appendChild(button);
+                    }
                 }
             }
         }
 
         if (schedule_has_cookie(MOBILE_CLASS_COOKIE)) {
-            mobile_switcher_classroom(schedule_pull_cookie(MOBILE_CLASS_COOKIE));
+            mobile_switcher_classroom(schedule, decodeURIComponent(schedule_pull_cookie(MOBILE_CLASS_COOKIE)));
         } else {
             let instructions = document.createElement("p");
             instructions.innerText = "Hi there!\nTo choose your class, swipe right.\nFor settings, swipe left.";
@@ -217,8 +221,9 @@ function mobile_switcher_load() {
 }
 
 function mobile_switcher_classroom(schedule, name) {
-    schedule_push_cookie(MOBILE_CLASS_COOKIE, name);
-    get("mobile-schedule-classname").innerText = name;
+    console.log(name);
+    schedule_push_cookie(MOBILE_CLASS_COOKIE, encodeURIComponent(name));
+    get("mobile-schedule-dashboard-classname").innerText = name;
     let subjects = get("mobile-schedule-subjects");
     clear(subjects);
     if (schedule.hasOwnProperty("classrooms")) {
