@@ -75,14 +75,14 @@ function download(file, data, type = "text/plain", encoding = "utf8") {
 }
 
 function exists(v) {
-    return get(v) !== null;
+    return get(v) !== undefined;
 }
 
 function get(v) {
     return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
 }
 
-function gestures(up, down, left, right, upgoing, downgoing, leftgoing, rightgoing) {
+function gestures(up = null, down = null, left = null, right = null, upgoing = null, downgoing = null, leftgoing = null, rightgoing = null) {
     let touchX, touchY, deltaX, deltaY;
     document.ontouchstart = (event) => {
         touchX = event.touches[0].clientX;

@@ -2,4 +2,193 @@ body {
     background-color: #00649c;
 }
 
-/* App Style */
+/*html {*/
+/*overflow-y: hidden;*/
+/*}*/
+
+/* Desktop Style */
+
+#desktop-dashboard {
+    height: 15vh;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#desktop-dashboard-message {
+    width: 100%;
+}
+
+#desktop-dashboard p {
+    margin: 0;
+}
+
+#desktop-dashboard > div {
+    min-width: 25vw;
+    margin: 1vh;
+}
+
+#desktop-dashboard > div, #desktop-schedule-classname > div, #desktop-schedule-subjects > div > * {
+    background-color: #333;
+    border-radius: 10px;
+    justify-content: center;
+}
+
+#desktop-schedule-classname > div {
+    width: 100%;
+    margin: 0.4vw;
+}
+
+#desktop-schedule-classname {
+    height: 10vh;
+    flex-direction: row;
+}
+
+#desktop-schedule {
+    height: 80vh;
+    direction: rtl;
+    align-content: stretch;
+    /*overflow: scroll;*/
+}
+
+#desktop-schedule-subjects {
+    flex-direction: row;
+    justify-content: stretch;
+    overflow-y: -moz-scrollbars-none;
+    overflow-y: auto;
+    min-height: 70vh;
+    height: 70vh;
+}
+
+#desktop-schedule-subjects::-webkit-scrollbar {
+    width: 0 !important
+}
+
+#desktop-schedule-subjects > div {
+    justify-content: stretch;
+    width: 100%;
+    margin: 0 0.4vw;
+}
+
+#desktop-schedule-subjects > div > div {
+    margin: 0.4vw 0;
+    height: 15vh;
+}
+
+#desktop-schedule-subjects > div > div > p {
+    margin: 0;
+    max-height: 14vh;
+    padding: 0.3vh;
+    font-size: large;
+    word-break: break-all;
+    text-overflow: clip;
+}
+
+/* Mobile Style */
+
+#mobile-schedule-subjects > div {
+    transition: all ease 1s;
+}
+
+#mobile-icons {
+    height: inherit;
+    padding: 1vh;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#icons > img {
+    vertical-align: middle;
+    height: 7vh;
+}
+
+#switcher * {
+    flex-direction: row;
+    justify-content: center;
+}
+
+#switcher * * {
+    display: inline-grid;
+    background-color: #6789ab;
+    color: #FFF;
+    font-size: 150%;
+    text-align: center;
+    border-radius: 1vh;
+    height: 8vh;
+    width: 16vw;
+    margin: 1vh;
+}
+
+#schedule > div, #message, #top, #installPopup {
+    background-color: #333;
+    border-radius: 10px;
+    margin: 1vh;
+    padding: 1.5vh;
+}
+
+#schedule > div > p {
+    text-align: right;
+    text-align-last: right;
+    direction: rtl;
+}
+
+#schedule > div > div {
+    direction: rtl;
+    flex-direction: row;
+}
+
+#schedule > div > div > * {
+    font-size: x-large;
+    margin: auto;
+    padding: 0;
+}
+
+#schedule > div > * > * > * {
+    font-size: x-large;
+    text-align: center;
+    font-style: italic;
+    margin: auto;
+    white-space: pre;
+    vertical-align: middle;
+}
+
+#top {
+    vertical-align: top;
+    border-radius: 10px;
+    position: static;
+    margin-top: 1vh;
+    padding: 2vh;
+}
+
+#corner {
+    height: 14vh;
+    width: 14vh;
+    border-radius: 14vh 0 0 0;
+    -moz-border-radius: 14vh 0 0 0;
+    -webkit-border-radius: 14vh 0 0 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+
+}
+
+#cornerContent {
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
+#cornerContent > p {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#cornerTop {
+    font-size: x-large;
+}
+
+#cornerBottom {
+    font-size: large;
+}
