@@ -33,7 +33,7 @@ function crossplatform_messages_load(schedule, v) {
             let index = 0;
             let next = () => {
                 if (schedule.messages.length > 0) {
-                    view.innerText = schedule.messages[messageIndex];
+                    view.innerText = schedule.messages[index];
                     if (index < schedule.messages.length - 1) {
                         index++;
                     } else {

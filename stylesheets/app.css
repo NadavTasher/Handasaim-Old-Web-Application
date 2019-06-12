@@ -85,14 +85,32 @@ body {
 
 /* Mobile Style */
 
+#mobile-schedule {
+    top: 0;
+    position: fixed;
+}
+
+#mobile-schedule-subjects {
+    width: 94vw;
+}
+
 #mobile-schedule-subjects > div {
-    transition: all ease 1s;
+    background-color: #ddddee;
+    border-radius: 1vh;
+    border-color: transparent;
+    color: #333;
+    margin: 0.5vh;
 }
 
 #mobile-schedule-subjects > div > p {
     direction: rtl;
-    text-align: right;
-    text-align-last: right;
+    justify-content: right;
+}
+
+#mobile-schedule-subjects > div > div {
+    flex-direction: row;
+    direction: rtl;
+    justify-content: space-evenly;
 }
 
 #mobile-switcher-grades > div {
@@ -114,110 +132,9 @@ body {
 }
 
 #mobile-schedule-dashboard-classname {
-    color: #FFF;
     font-size: 200%;
 }
 
-#mobile-icons {
-    height: inherit;
-    padding: 1vh;
-    flex-direction: row;
-    justify-content: center;
-}
-
-#icons > img {
-    vertical-align: middle;
-    height: 7vh;
-}
-
-#switcher * {
-    flex-direction: row;
-    justify-content: center;
-}
-
-#switcher * * {
-    display: inline-grid;
-    background-color: #6789ab;
+#mobile-schedule-dashboard > p {
     color: #FFF;
-    font-size: 150%;
-    text-align: center;
-    border-radius: 1vh;
-    height: 8vh;
-    width: 16vw;
-    margin: 1vh;
-}
-
-#schedule > div, #message, #top, #installPopup {
-    background-color: #333;
-    border-radius: 10px;
-    margin: 1vh;
-    padding: 1.5vh;
-}
-
-#schedule > div > p {
-    text-align: right;
-    text-align-last: right;
-    direction: rtl;
-}
-
-#schedule > div > div {
-    direction: rtl;
-    flex-direction: row;
-}
-
-#schedule > div > div > * {
-    font-size: x-large;
-    margin: auto;
-    padding: 0;
-}
-
-#schedule > div > * > * > * {
-    font-size: x-large;
-    text-align: center;
-    font-style: italic;
-    margin: auto;
-    white-space: pre;
-    vertical-align: middle;
-}
-
-#top {
-    vertical-align: top;
-    border-radius: 10px;
-    position: static;
-    margin-top: 1vh;
-    padding: 2vh;
-}
-
-#corner {
-    height: 14vh;
-    width: 14vh;
-    border-radius: 14vh 0 0 0;
-    -moz-border-radius: 14vh 0 0 0;
-    -webkit-border-radius: 14vh 0 0 0;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-
-}
-
-#cornerContent {
-    justify-content: space-evenly;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-}
-
-#cornerContent > p {
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    vertical-align: middle;
-}
-
-#cornerTop {
-    font-size: x-large;
-}
-
-#cornerBottom {
-    font-size: large;
 }
