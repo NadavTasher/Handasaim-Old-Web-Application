@@ -209,7 +209,6 @@ function mobile_switcher_load() {
 }
 
 function mobile_classroom_load(schedule, name) {
-    console.log(name);
     schedule_push_cookie(MOBILE_CLASS_COOKIE, encodeURIComponent(name));
     get("mobile-schedule-dashboard-classname").innerText = name;
     let subjects = get("mobile-schedule-subjects");
@@ -266,5 +265,3 @@ function mobile_classroom_load(schedule, name) {
         }
     }
 }
-
-// OLD MOBILE CODE
