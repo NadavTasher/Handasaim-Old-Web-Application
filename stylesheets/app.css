@@ -2,85 +2,59 @@ body {
     background-color: #00649c;
 }
 
-/*html {*/
-/*overflow-y: hidden;*/
-/*}*/
+html::-webkit-scrollbar {
+    width: 0 !important
+}
 
 /* Desktop Style */
 
 #desktop-dashboard {
-    height: 15vh;
     flex-direction: row;
-    justify-content: space-evenly;
-}
-
-#desktop-dashboard-message {
-    width: 100%;
+    height: 15vh;
 }
 
 #desktop-dashboard p {
-    margin: 0;
-}
-
-#desktop-dashboard > div {
-    min-width: 25vw;
-    margin: 1vh;
-}
-
-#desktop-dashboard > div, #desktop-schedule-classname > div, #desktop-schedule-subjects > div > * {
-    background-color: #333;
-    border-radius: 10px;
-    justify-content: center;
-}
-
-#desktop-schedule-classname > div {
-    width: 100%;
-    margin: 0.4vw;
-}
-
-#desktop-schedule-classname {
-    height: 10vh;
-    flex-direction: row;
+    color: #FFF;
 }
 
 #desktop-schedule {
     height: 80vh;
     direction: rtl;
     align-content: stretch;
-    /*overflow: scroll;*/
 }
 
 #desktop-schedule-subjects {
-    flex-direction: row;
-    justify-content: stretch;
     overflow-y: -moz-scrollbars-none;
     overflow-y: auto;
-    min-height: 70vh;
-    height: 70vh;
+    min-height: 68vh;
+    height: 68vh;
 }
 
 #desktop-schedule-subjects::-webkit-scrollbar {
     width: 0 !important
 }
 
-#desktop-schedule-subjects > div {
-    justify-content: stretch;
-    width: 100%;
-    margin: 0 0.4vw;
-}
-
-#desktop-schedule-subjects > div > div {
-    margin: 0.4vw 0;
-    height: 15vh;
-}
-
-#desktop-schedule-subjects > div > div > p {
+#desktop-schedule-classnames, #desktop-schedule-subjects {
+    flex-direction: row;
     margin: 0;
-    max-height: 14vh;
-    padding: 0.3vh;
-    font-size: large;
+}
+
+#desktop-schedule-subjects > div {
+    align-self: start;
+}
+
+#desktop-schedule-subjects > div > p, #desktop-schedule-classnames > p {
+    background-color: #ddddee;
+    border-radius: 1vh;
+    border-color: transparent;
+    color: #333;
     word-break: break-all;
-    text-overflow: clip;
+    min-height: 10vh;
+    max-height: 10vh;
+    height: 10vh;
+    min-width: 5vw;
+    max-width: 5vw;
+    width: 5vw;
 }
 
 /* Mobile Style */

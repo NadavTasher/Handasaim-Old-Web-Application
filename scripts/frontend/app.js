@@ -53,73 +53,61 @@ function crossplatform_messages_load(schedule, v) {
     }
 }
 
-function setupClassrooms() {
-    function addSubject(column, subject) {
-        if (subject.name.length > 0) {
-            let subjectView = document.createElement("div");
-            let name = document.createElement("p");
-            // let teachers = document.createElement("p");
-            //
-            // for (let t = 0; t < subject.teachers.length; t++) {
-            //     teachers.innerHTML += subject.teachers[t];
-            // }
-
-            name.innerText = subject.name;
-            subjectView.appendChild(name);
-            // subjectView.appendChild(teachers);
-            column.appendChild(subjectView);
+function desktop_classrooms_load(schedule) {
+    clear("desktop-schedule-subjects");
+    clear("desktop-schedule-classnames");
+    if (schedule.hasOwnProperty("classrooms")) {
+        let dayLength = 0;
+        for (let c = 0; c < schedule.classrooms.length; c++) {
+            let classroom = schedule.classrooms[c];
+            if (classroom.hasOwnProperty("subjects")) {
+                if (classroom.subjects.length > dayLength) dayLength = classroom.subjects.length;
+            }
         }
-    }
-
-    function dayLength() {
-        let maxLength = 0;
-        for (let classroomIndex = 0; classroomIndex < schedule.classrooms.length; classroomIndex++) {
-            let classroom = schedule.classrooms[classroomIndex];
-            if (classroom.subjects.length > maxLength) maxLength = classroom.subjects.length;
-        }
-        return maxLength;
-    }
-
-    function setupTimes() {
-        get("classname").appendChild(document.createElement("div"));
+        get("desktop-schedule-classnames").appendChild(document.createElement("p"));
         let column = document.createElement("div");
-        for (let h = 0; h < dayLength(); h++) {
-            let timeHolder = document.createElement("div");
+        for (let h = 0; h < dayLength; h++) {
             let time = document.createElement("p");
-            time.innerText = h;
-            timeHolder.appendChild(time);
-            column.appendChild(timeHolder);
+            time.innerText = h.toString();
+            column.appendChild(time);
         }
-        get("subjects").appendChild(column);
-    }
-
-    clear("subjects");
-    clear("classname");
-    setupTimes();
-    for (let classroomIndex = 0; classroomIndex < schedule.classrooms.length; classroomIndex++) {
-        let classroom = schedule.classrooms[classroomIndex];
-        let column = document.createElement("div");
-        let nameHolder = document.createElement("div");
-        let nameTitle = document.createElement("p");
-        nameHolder.appendChild(nameTitle);
-        nameTitle.innerText = classroom.name;
-        get("classname").appendChild(nameHolder);
-        for (let subjectIndex = 0; subjectIndex < classroom.subjects.length; subjectIndex++) {
-            let subject = classroom.subjects[subjectIndex];
-            addSubject(column, subject);
+        get("desktop-schedule-subjects").appendChild(column);
+        for (let c = 0; c < schedule.classrooms.length; c++) {
+            let classroom = schedule.classrooms[c];
+            let column = document.createElement("div");
+            let name = document.createElement("p");
+            name.innerText = classroom.name;
+            get("desktop-schedule-classnames").appendChild(name);
+            if (classroom.hasOwnProperty("subjects")) {
+                for (let h = 0; h < dayLength; h++) {
+                    let name = document.createElement("p");
+                    for (let s = 0; s < classroom.subjects.length; s++) {
+                        let subject = classroom.subjects[s];
+                        if (subject.hasOwnProperty("hour")) {
+                            if (subject.hour === h) {
+                                if (subject.hasOwnProperty("name")) {
+                                    name.innerText = subject.name;
+                                }
+                            }
+                        }
+                    }
+                    if (name.innerText.length === 0) name.style.backgroundColor = "transparent";
+                    column.appendChild(name);
+                }
+            }
+            get("desktop-schedule-subjects").appendChild(column);
         }
-        get("subjects").appendChild(column);
     }
 }
 
-
 function desktop_load() {
+    view("desktop");
     // Scroll load
     setInterval(() => {
         if (!desktopScrollPaused) {
-            let previousTop = get("subjects").scrollTop;
-            get("subjects").scrollBy(0, desktopScrollDirection ? 1 : -10);
-            if (get("subjects").scrollTop === previousTop) {
+            let previousTop = get("desktop-schedule-subjects").scrollTop;
+            get("desktop-schedule-subjects").scrollBy(0, desktopScrollDirection ? 1 : -10);
+            if (get("desktop-schedule-subjects").scrollTop === previousTop) {
                 desktopScrollPaused = true;
                 setTimeout(() => {
                     desktopScrollPaused = false;
@@ -130,14 +118,14 @@ function desktop_load() {
     }, DESKTOP_SCROLL_INTERVAL);
     let timeFunction = () => {
         let now = new Date();
-        get("desktop-dashboard-data-time-time").innerText = now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes());
-        get("desktop-dashboard-data-time-date").innerText = now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear();
+        get("desktop-dashboard-date-time-time").innerText = now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes());
+        get("desktop-dashboard-date-time-date").innerText = now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear();
     };
     let loadFunction = () => {
         schedule_load((schedule) => {
             // Message load
-            crossplatform_messages_load(schedule);
-            setupClassrooms();
+            crossplatform_messages_load(schedule, get("desktop-dashboard-message-text"));
+            desktop_classrooms_load(schedule);
         });
     };
     setInterval(timeFunction, DESKTOP_TIME_REFRESH_INTERVAL);
@@ -160,7 +148,7 @@ function mobile_load() {
                         let button = document.createElement("button");
                         button.onclick = () => {
                             gestures();
-                            mobile_switcher_classroom(schedule, classroom.name);
+                            mobile_classroom_load(schedule, classroom.name);
                             slide("mobile-switcher", false, false, () => {
                                 view("mobile-schedule");
                                 slide("mobile-schedule", true, true, mobile_schedule_load);
@@ -174,7 +162,7 @@ function mobile_load() {
         }
 
         if (schedule_has_cookie(MOBILE_CLASS_COOKIE)) {
-            mobile_switcher_classroom(schedule, decodeURIComponent(schedule_pull_cookie(MOBILE_CLASS_COOKIE)));
+            mobile_classroom_load(schedule, decodeURIComponent(schedule_pull_cookie(MOBILE_CLASS_COOKIE)));
         } else {
             let instructions = document.createElement("p");
             instructions.innerText = "Hi there!\nTo choose your class, swipe right.\nFor settings, swipe left.";
@@ -220,7 +208,7 @@ function mobile_switcher_load() {
     });
 }
 
-function mobile_switcher_classroom(schedule, name) {
+function mobile_classroom_load(schedule, name) {
     console.log(name);
     schedule_push_cookie(MOBILE_CLASS_COOKIE, encodeURIComponent(name));
     get("mobile-schedule-dashboard-classname").innerText = name;
