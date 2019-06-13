@@ -61,11 +61,9 @@ html::-webkit-scrollbar {
 
 #mobile-schedule {
     top: 0;
+    left: 0;
+    right: 0;
     position: fixed;
-}
-
-#mobile-schedule-subjects {
-    width: 94vw;
 }
 
 #mobile-schedule-subjects > div {
@@ -78,6 +76,8 @@ html::-webkit-scrollbar {
 
 #mobile-schedule-subjects > div > p {
     direction: rtl;
+    text-align: right;
+    text-align-last: right;
     justify-content: right;
 }
 
