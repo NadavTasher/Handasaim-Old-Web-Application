@@ -4,14 +4,14 @@ This directory, `resources`, is the official repository for the Handasaim+ Web A
 ### Instructions for installing on a plasma
 You will need to trigger the following command once, every login.
 ```
-chromium --incognito --password-store=basic --start-fullscreen https://hwbb.github.io/h/plasma.html
+chromium --incognito --password-store=basic --start-fullscreen https://handasaim.app
 ```
 #### Adding the command to startup script
 ```
 mkdir ~/.config/autostart
 echo [Desktop\ Entry] > ~/.config/autostart/Handasaim.desktop
 echo Type=Application >> ~/.config/autostart/Handasaim.desktop
-echo Exec=chromium\ --incognito\ --password-store=basic\ --start-fullscreen\ https://hwbb.github.io/h/plasma.html >> ~/.config/autostart/Handasaim.desktop
+echo Exec=chromium\ --incognito\ --password-store=basic\ --start-fullscreen\ https://handasaim.app >> ~/.config/autostart/Handasaim.desktop
 echo Hidden=false >> ~/.config/autostart/Handasaim.desktop
 echo NoDisplay=false >> ~/.config/autostart/Handasaim.desktop
 echo X-GNOME-Autostart-enabled=true >> ~/.config/autostart/Handasaim.desktop
@@ -21,7 +21,7 @@ File contents:
 ```
 [Desktop Entry]
 Type=Application
-Exec=chromium --incognito\ --password-store=basic\ --start-fullscreen https://hwbb.github.io/h/plasma.html
+Exec=chromium --incognito\ --password-store=basic\ --start-fullscreen https://handasaim.app
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
