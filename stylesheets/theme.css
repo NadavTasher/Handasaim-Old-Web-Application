@@ -59,7 +59,7 @@ a, p, body, input, select, option, button, table, textarea, div {
     width: -moz-available;
 }
 
-div {
+body {
     margin: 0;
     padding: 0;
 }

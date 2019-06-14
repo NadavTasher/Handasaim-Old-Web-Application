@@ -41,6 +41,8 @@ html::-webkit-scrollbar {
 
 #desktop-schedule-subjects > div {
     align-self: start;
+    margin: 0;
+    padding: 0;
 }
 
 #desktop-schedule-subjects > div > p, #desktop-schedule-classnames > p {
@@ -94,6 +96,7 @@ html::-webkit-scrollbar {
 
 #mobile-switcher-grades > div > * {
     width: 100%;
+    height: 100%;
 }
 
 #mobile-schedule-dashboard {
