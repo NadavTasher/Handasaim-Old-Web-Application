@@ -37,6 +37,8 @@ html::-webkit-scrollbar {
 #desktop-schedule-classnames, #desktop-schedule-subjects {
     flex-direction: row;
     margin: 0;
+    padding: 0;
+    width: auto;
 }
 
 #desktop-schedule-subjects > div {
