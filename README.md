@@ -78,7 +78,7 @@ shell_exec("rm -rf " . DESTINATION_DIRECTORY);
 echo "Cloning remote\n";
 shell_exec("git clone -q " . $configuration->remote . " " . DESTINATION_DIRECTORY);
 echo "Copying files\n";
-shell_exec("cp -r " . SOURCE_DIRECTORY . " " . DESTINATION_DIRECTORY);
+shell_exec("cp -r " . SOURCE_DIRECTORY . "/* " . DESTINATION_DIRECTORY);
 echo "Committing and pushing\n";
 shell_exec("cd " . DESTINATION_DIRECTORY . " && git config credential.helper store && git add --all -f && git commit -a -m 'Automated' && git push -q --all");
 echo "Done\n";

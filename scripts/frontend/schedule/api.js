@@ -1,6 +1,6 @@
 const SCHEDULE_ENDPOINTS = [
-    "files/schedule/schedule.json",
-    "https://raw.githubusercontent.com/HWBB/ScheduleBackup/master/schedule.json"
+    "files/schedule.json",
+    "https://raw.githubusercontent.com/HWBB/LastResort/master/files/schedule.json"
 ];
 
 function schedule_load(callback) {
