@@ -73,14 +73,23 @@ const CONFIGURATION_FILE = __DIR__ . DIRECTORY_SEPARATOR . "configuration.json";
 echo "Loading configuration...\n";
 $configuration = json_decode(file_get_contents(CONFIGURATION_FILE));
 echo "Repository remote: " . $configuration->remote . "\n";
-echo "Removing destination\n";
-shell_exec("rm -rf " . DESTINATION_DIRECTORY);
-echo "Cloning remote\n";
-shell_exec("git clone -q " . $configuration->remote . " " . DESTINATION_DIRECTORY);
-echo "Copying files\n";
-shell_exec("cp -r " . SOURCE_DIRECTORY . "/* " . DESTINATION_DIRECTORY);
-echo "Committing and pushing\n";
-shell_exec("cd " . DESTINATION_DIRECTORY . " && git config credential.helper store && git add --all -f && git commit -a -m 'Automated' && git push -q --all");
+$commands = [
+    "rm -rf " . DESTINATION_DIRECTORY,
+    "mkdir " . DESTINATION_DIRECTORY,
+    "cp -r " . SOURCE_DIRECTORY . "/* " . DESTINATION_DIRECTORY,
+    "cd " . DESTINATION_DIRECTORY,
+    "git init",
+    "git config credential.helper store",
+    "git remote add origin " . $configuration->remote,
+    "git add --all",
+    "git commit --all -m 'Automated Last Resort Backup'",
+    "git push --all --force"
+];
+$command = "echo Starting";
+foreach ($commands as $c) {
+    $command .= " && " . $c;
+}
+shell_exec($command);
 echo "Done\n";
 ```
 

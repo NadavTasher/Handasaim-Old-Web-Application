@@ -53,42 +53,41 @@ function crossplatform_messages_load(schedule, v) {
     }
 }
 
-function desktop_classrooms_load(schedule) {
+function desktop_grades_load(schedule) {
     clear("desktop-schedule-subjects");
-    clear("desktop-schedule-classnames");
-    if (schedule.hasOwnProperty("classrooms")) {
+    clear("desktop-schedule-grades");
+    if (schedule.hasOwnProperty("grades")) {
         let dayLength = 0;
-        for (let c = 0; c < schedule.classrooms.length; c++) {
-            let classroom = schedule.classrooms[c];
-            if (classroom.hasOwnProperty("subjects")) {
-                if (classroom.subjects.length > dayLength) dayLength = classroom.subjects.length;
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
+            if (grade.hasOwnProperty("subjects")) {
+                for (let h = 0; h < 15; h++) {
+                    if (h > dayLength && grade.subjects.hasOwnProperty(h.toString())) {
+                        dayLength = h;
+                    }
+                }
             }
         }
-        get("desktop-schedule-classnames").appendChild(document.createElement("p"));
+        get("desktop-schedule-grades").appendChild(document.createElement("p"));
         let column = document.createElement("div");
-        for (let h = 0; h < dayLength; h++) {
+        for (let h = 0; h <= dayLength; h++) {
             let time = document.createElement("p");
             time.innerText = h.toString();
             column.appendChild(time);
         }
         get("desktop-schedule-subjects").appendChild(column);
-        for (let c = 0; c < schedule.classrooms.length; c++) {
-            let classroom = schedule.classrooms[c];
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
             let column = document.createElement("div");
             let name = document.createElement("p");
-            name.innerText = classroom.name;
-            get("desktop-schedule-classnames").appendChild(name);
-            if (classroom.hasOwnProperty("subjects")) {
-                for (let h = 0; h < dayLength; h++) {
+            name.innerText = grade.name;
+            get("desktop-schedule-grades").appendChild(name);
+            if (grade.hasOwnProperty("subjects")) {
+                for (let h = 0; h <= dayLength; h++) {
                     let name = document.createElement("p");
-                    for (let s = 0; s < classroom.subjects.length; s++) {
-                        let subject = classroom.subjects[s];
-                        if (subject.hasOwnProperty("hour")) {
-                            if (subject.hour === h) {
-                                if (subject.hasOwnProperty("name")) {
-                                    name.innerText = subject.name;
-                                }
-                            }
+                    if (grade.subjects.hasOwnProperty(h)) {
+                        if (grade.subjects[h].hasOwnProperty("name")) {
+                            name.innerText = grade.subjects[h.toString()].name;
                         }
                     }
                     if (name.innerText.length === 0) name.style.backgroundColor = "transparent";
@@ -124,8 +123,8 @@ function desktop_load() {
     let loadFunction = () => {
         schedule_load((schedule) => {
             // Message load
-            crossplatform_messages_load(schedule, get("desktop-dashboard-message-text"));
-            desktop_classrooms_load(schedule);
+            crossplatform_messages_load(schedule, get("desktop-dashboard-message"));
+            desktop_grades_load(schedule);
         });
     };
     setInterval(timeFunction, DESKTOP_TIME_REFRESH_INTERVAL);
@@ -140,29 +139,29 @@ function mobile_load() {
     schedule_load((schedule) => {
         crossplatform_messages_load(schedule, "mobile-schedule-dashboard-message");
 
-        if (schedule.hasOwnProperty("classrooms")) {
-            for (let c = 0; c < schedule.classrooms.length; c++) {
-                let classroom = schedule.classrooms[c];
-                if (classroom.hasOwnProperty("grade")) {
-                    if (classroom.hasOwnProperty("name")) {
+        if (schedule.hasOwnProperty("grades")) {
+            for (let c = 0; c < schedule.grades.length; c++) {
+                let grade = schedule.grades[c];
+                if (grade.hasOwnProperty("grade")) {
+                    if (grade.hasOwnProperty("name")) {
                         let button = document.createElement("button");
                         button.onclick = () => {
                             gestures();
-                            mobile_classroom_load(schedule, classroom.name);
+                            mobile_grade_load(schedule, grade.name);
                             slide("mobile-switcher", false, false, () => {
                                 view("mobile-schedule");
                                 slide("mobile-schedule", true, true, mobile_schedule_load);
                             });
                         };
-                        button.innerHTML = classroom.name;
-                        get("mobile-switcher-grade-" + classroom.grade).appendChild(button);
+                        button.innerHTML = grade.name;
+                        get("mobile-switcher-grade-" + grade.grade).appendChild(button);
                     }
                 }
             }
         }
 
         if (schedule_has_cookie(MOBILE_CLASS_COOKIE)) {
-            mobile_classroom_load(schedule, decodeURIComponent(schedule_pull_cookie(MOBILE_CLASS_COOKIE)));
+            mobile_grade_load(schedule, decodeURIComponent(schedule_pull_cookie(MOBILE_CLASS_COOKIE)));
         } else {
             let instructions = document.createElement("p");
             instructions.innerText = "Hi there!\nTo choose your class, swipe right.\nFor settings, swipe left.";
@@ -208,55 +207,55 @@ function mobile_switcher_load() {
     });
 }
 
-function mobile_classroom_load(schedule, name) {
+function mobile_grade_load(schedule, name) {
     schedule_push_cookie(MOBILE_CLASS_COOKIE, encodeURIComponent(name));
-    get("mobile-schedule-dashboard-classname").innerText = name;
+    get("mobile-schedule-dashboard-grade").innerText = name;
     let subjects = get("mobile-schedule-subjects");
     clear(subjects);
-    if (schedule.hasOwnProperty("classrooms")) {
-        for (let c = 0; c < schedule.classrooms.length; c++) {
-            if (schedule.classrooms[c].name === name) {
-                let classroom = schedule.classrooms[c];
-                if (classroom.hasOwnProperty("subjects")) {
-                    for (let s = 0; s < classroom.subjects.length; s++) {
-                        let subject = classroom.subjects[s];
-                        if (subject.hasOwnProperty("name")) {
-                            if (subject.name.length > 0) {
-                                let view = document.createElement("div");
-                                let top = document.createElement("p");
-                                let bottom = document.createElement("div");
-                                let time = document.createElement("p");
-                                let teachers = document.createElement("p");
-                                if (subject.hasOwnProperty("teachers")) {
-                                    for (let t = 0; t < subject.teachers.length; t++) {
-                                        let teacher = subject.teachers[t].split(" ")[0];
-                                        if (teachers.innerText.length === 0) {
-                                            teachers.innerText = teacher;
-                                        } else {
-                                            teachers.innerText += " · ";
-                                            teachers.innerText += teacher;
+    if (schedule.hasOwnProperty("grades")) {
+        for (let c = 0; c < schedule.grades.length; c++) {
+            if (schedule.grades[c].name === name) {
+                let grade = schedule.grades[c];
+                if (grade.hasOwnProperty("subjects")) {
+                    for (let h = 0; h <= 15; h++) {
+                        if (grade.subjects.hasOwnProperty(h.toString())) {
+                            let subject = grade.subjects[h.toString()];
+                            if (subject.hasOwnProperty("name")) {
+                                if (subject.name.length > 0) {
+                                    let view = document.createElement("div");
+                                    let top = document.createElement("p");
+                                    let bottom = document.createElement("div");
+                                    let time = document.createElement("p");
+                                    let teachers = document.createElement("p");
+                                    if (subject.hasOwnProperty("teachers")) {
+                                        for (let t = 0; t < subject.teachers.length; t++) {
+                                            let teacher = subject.teachers[t].split(" ")[0];
+                                            if (teachers.innerText.length === 0) {
+                                                teachers.innerText = teacher;
+                                            } else {
+                                                teachers.innerText += " · ";
+                                                teachers.innerText += teacher;
+                                            }
                                         }
                                     }
-                                }
-                                if (subject.hasOwnProperty("hour")) {
-                                    top.innerHTML = "\u200F" + subject.hour + ". " + subject.name;
-                                }
-                                if (subject.hasOwnProperty("start") && subject.hasOwnProperty("end")) {
-                                    time.innerHTML = schedule_minute_to_time(subject.start) + " - " + schedule_minute_to_time(subject.end);
-                                }
-                                hide(bottom);
-                                view.onclick = () => {
-                                    if (!visible(bottom)) {
-                                        show(bottom);
-                                    } else {
-                                        hide(bottom);
+                                    top.innerHTML = "\u200F" + h + ". " + subject.name;
+                                    if (schedule.hasOwnProperty("schedule")) {
+                                        time.innerHTML = schedule_minute_to_time(schedule.schedule[h]) + " - " + schedule_minute_to_time(schedule.schedule[h] + 45);
                                     }
-                                };
-                                bottom.appendChild(teachers);
-                                bottom.appendChild(time);
-                                view.appendChild(top);
-                                view.appendChild(bottom);
-                                subjects.appendChild(view);
+                                    hide(bottom);
+                                    view.onclick = () => {
+                                        if (!visible(bottom)) {
+                                            show(bottom);
+                                        } else {
+                                            hide(bottom);
+                                        }
+                                    };
+                                    bottom.appendChild(teachers);
+                                    bottom.appendChild(time);
+                                    view.appendChild(top);
+                                    view.appendChild(bottom);
+                                    subjects.appendChild(view);
+                                }
                             }
                         }
                     }
