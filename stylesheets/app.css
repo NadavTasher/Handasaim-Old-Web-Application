@@ -6,6 +6,69 @@ html {
     overflow-y: hidden;
 }
 
+/* Global Design */
+
+#dashboard {
+    flex-direction: row;
+    height: 18vh;
+    overflow: hidden;
+}
+
+#subjects p {
+
+}
+
+#message {
+    width: 100%;
+}
+
+#home {
+    direction: rtl;
+}
+
+#dashboard p {
+    color: #FFFFFF;
+}
+
+#grades > p, #subjects p {
+    overflow: hidden;
+    min-width: 50px;
+    max-width: 50px;
+    width: 50px;
+    height: 8vh;
+    background-color: #ddddee;
+    border-radius: 1vh;
+    border-color: transparent;
+    padding: 1vw;
+}
+
+#grades,#subjects {
+    overflow-x: scroll;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#grades::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+#subjects {
+    flex-direction: row;
+    height: 69vh;
+    min-height: 69vh;
+    max-height: 69vh;
+}
+
+#subjects::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+#top {
+    font-size: 200%;
+}
+
 /* Desktop Style */
 
 #desktop-dashboard {
@@ -125,7 +188,7 @@ html {
     margin: 0 1vh;
 }
 
-#mobile-schedule-dashboard p{
+#mobile-schedule-dashboard p {
     padding: 0;
     margin: 0.5vh;
 }

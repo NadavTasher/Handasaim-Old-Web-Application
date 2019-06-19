@@ -13,27 +13,33 @@ let messageInterval;
 let desktopScrollDirection = true, desktopScrollPaused = false;
 
 function load() {
-    crossplatform_background_load(topColor, bottomColor);
+    view("home");
+    background_load(topColor, bottomColor);
+    schedule_load((schedule) => {
+        messages(schedule);
+        grades(schedule, null);
+    });
     if (screen.width > screen.height) {
-        desktop_load();
+        // desktop_load();
+        desktop();
     } else {
-        mobile_load();
+
     }
+
 }
 
-function crossplatform_background_load(top, bottom) {
-    document.body.style.backgroundImage = "linear-gradient(to bottom," + top + ", " + bottom + ")";
-    document.body.style.backgroundColor = top;
+function glance(top, bottom) {
+    get("top").innerText = top;
+    get("bottom").innerText = bottom;
 }
 
-function crossplatform_messages_load(schedule, v) {
-    let view = get(v);
+function messages(schedule) {
     if (schedule.hasOwnProperty("messages")) {
         if (schedule.messages.length > 0) {
             let index = 0;
             let next = () => {
                 if (schedule.messages.length > 0) {
-                    view.innerText = schedule.messages[index];
+                    get("message").innerText = schedule.messages[index];
                     if (index < schedule.messages.length - 1) {
                         index++;
                     } else {
@@ -44,13 +50,68 @@ function crossplatform_messages_load(schedule, v) {
             next();
             clearInterval(messageInterval);
             messageInterval = setInterval(next, CROSSPLATFORM_MESSAGE_REFRESH_INTERVAL);
-            show(view);
+            show("message");
         } else {
-            hide(view);
+            hide("message");
         }
     } else {
-        hide(view);
+        hide("message");
     }
+}
+
+function background_load(top, bottom) {
+    document.body.style.backgroundImage = "linear-gradient(to bottom," + top + ", " + bottom + ")";
+    document.body.style.backgroundColor = top;
+}
+
+function grades(schedule) {
+    clear("subjects");
+    clear("grades");
+    if (schedule.hasOwnProperty("grades")) {
+        let dayLength = 0;
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
+            if (grade.hasOwnProperty("subjects")) {
+                for (let h = 0; h < 15; h++) {
+                    if (h > dayLength && grade.subjects.hasOwnProperty(h.toString())) {
+                        dayLength = h;
+                    }
+                }
+            }
+        }
+        get("grades").appendChild(document.createElement("p"));
+        let column = document.createElement("div");
+        for (let h = 0; h <= dayLength; h++) {
+            let time = document.createElement("p");
+            time.innerText = h.toString();
+            column.appendChild(time);
+        }
+        get("subjects").appendChild(column);
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
+            let column = document.createElement("div");
+            let name = document.createElement("p");
+            name.innerText = grade.name;
+            get("grades").appendChild(name);
+            if (grade.hasOwnProperty("subjects")) {
+                for (let h = 0; h <= dayLength; h++) {
+                    let name = document.createElement("p");
+                    if (grade.subjects.hasOwnProperty(h)) {
+                        if (grade.subjects[h].hasOwnProperty("name")) {
+                            name.innerText = grade.subjects[h.toString()].name;
+                        }
+                    }
+                    if (name.innerText.length === 0) name.style.backgroundColor = "transparent";
+                    column.appendChild(name);
+                }
+            }
+            get("subjects").appendChild(column);
+        }
+    }
+}
+
+function subjects_load(schedule, grade, view) {
+
 }
 
 function desktop_grades_load(schedule) {
@@ -99,14 +160,13 @@ function desktop_grades_load(schedule) {
     }
 }
 
-function desktop_load() {
-    view("desktop");
+function desktop() {
     // Scroll load
     setInterval(() => {
         if (!desktopScrollPaused) {
-            let previousTop = get("desktop-schedule-subjects").scrollTop;
-            get("desktop-schedule-subjects").scrollBy(0, desktopScrollDirection ? 1 : -10);
-            if (get("desktop-schedule-subjects").scrollTop === previousTop) {
+            let previousTop = get("subjects").scrollTop;
+            get("subjects").scrollBy(0, desktopScrollDirection ? 1 : -10);
+            if (get("subjects").scrollTop === previousTop) {
                 desktopScrollPaused = true;
                 setTimeout(() => {
                     desktopScrollPaused = false;
@@ -117,20 +177,11 @@ function desktop_load() {
     }, DESKTOP_SCROLL_INTERVAL);
     let timeFunction = () => {
         let now = new Date();
-        get("desktop-dashboard-date-time-time").innerText = now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes());
-        get("desktop-dashboard-date-time-date").innerText = now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear();
-    };
-    let loadFunction = () => {
-        schedule_load((schedule) => {
-            // Message load
-            crossplatform_messages_load(schedule, get("desktop-dashboard-message"));
-            desktop_grades_load(schedule);
-        });
+        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear());
     };
     setInterval(timeFunction, DESKTOP_TIME_REFRESH_INTERVAL);
-    setInterval(loadFunction, DESKTOP_SCHEDULE_REFRESH_INTERVAL);
+    setInterval(load, DESKTOP_SCHEDULE_REFRESH_INTERVAL);
     timeFunction();
-    loadFunction();
 }
 
 function mobile_load() {
