@@ -240,7 +240,8 @@ function mobile_grade_load(schedule, name) {
                                     }
                                     top.innerHTML = "\u200F" + h + ". " + subject.name;
                                     if (schedule.hasOwnProperty("schedule")) {
-                                        time.innerHTML = schedule_minute_to_time(schedule.schedule[h]) + " - " + schedule_minute_to_time(schedule.schedule[h] + 45);
+                                        if (schedule.schedule.length > h)
+                                            time.innerHTML = schedule_minute_to_time(schedule.schedule[h]) + " - " + schedule_minute_to_time(schedule.schedule[h] + 45);
                                     }
                                     hide(bottom);
                                     view.onclick = () => {
