@@ -28,7 +28,7 @@ Redirect /index.html /home/
 ```
 
 ##### public/app
-Run `ln -s $PWD/sources/app public/app` from `Root Directory`
+Run `ln -s $PWD/sources/app public/home` from `Root Directory`
 
 ##### sources/app
 This directory (The WebApp)
