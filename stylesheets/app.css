@@ -25,13 +25,13 @@ html::-webkit-scrollbar {
 
 #desktop-schedule-subjects {
     overflow-y: -moz-scrollbars-none;
-    overflow-y: auto;
+    overflow-y: scroll;
     min-height: 68vh;
     height: 68vh;
 }
 
 #desktop-schedule-subjects::-webkit-scrollbar {
-    width: 0 !important
+    width: 0 !important;
 }
 
 #desktop-schedule-classnames, #desktop-schedule-subjects {

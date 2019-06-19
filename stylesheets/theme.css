@@ -27,9 +27,6 @@ body {
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    /* Positioning */
-    margin: 0;
-    padding: 0;
 }
 
 a, p, body, input, select, option, button, table, textarea, div {
@@ -48,10 +45,7 @@ a, p, body, input, select, option, button, table, textarea, div {
     /* Alignment */
     justify-self: center;
     justify-content: center;
-    justify-items: center;
     align-items: center;
-    align-content: center;
-    align-self: stretch;
     /* Text Alignment */
     text-align: center;
     text-align-last: center;
@@ -62,8 +56,17 @@ a, p, body, input, select, option, button, table, textarea, div {
     height: min-content;
 }
 
+body, div{
+    /* Alignment */
+    align-items: stretch;
+    /* Positioning */
+    margin: 0;
+    padding: 0;
+}
+
 p {
     flex-flow: wrap;
+    height: auto;
 }
 
 textarea {
