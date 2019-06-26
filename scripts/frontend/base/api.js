@@ -54,6 +54,28 @@ function api(endpoint = null, api = null, action = null, parameters = null, call
     });
 }
 
+function apply(configuration, target = null) {
+    if (target === null) {
+        for (let id in configuration) {
+            if (configuration.hasOwnProperty(id) && exists(id)) apply(configuration[id], get(id));
+        }
+    } else {
+        target = get(target);
+        if (target !== null) {
+            for (let property in configuration) {
+                if (configuration.hasOwnProperty(property)) {
+                    if (typeof configuration[property] === typeof {}) {
+                        if (!target.hasOwnProperty(property)) target[property] = {};
+                        apply(configuration[property], target[property]);
+                    } else {
+                        target[property] = configuration[property];
+                    }
+                }
+            }
+        }
+    }
+}
+
 function body(api = null, action = null, parameters = null, form = new FormData()) {
     if (api !== null && action !== null && parameters !== null && !form.has(api)) {
         form.append(api, JSON.stringify({
