@@ -100,58 +100,125 @@ function background_load(top, bottom) {
 function grades(schedule) {
     clear("subjects");
     clear("grades");
-    if (schedule.hasOwnProperty("grades")) {
-        // Figure out day's length
-        let dayLength = 0;
-        for (let c = 0; c < schedule.grades.length; c++) {
-            let grade = schedule.grades[c];
-            if (grade.hasOwnProperty("subjects")) {
-                for (let h = 0; h < 15; h++) {
-                    if (h > dayLength && grade.subjects.hasOwnProperty(h.toString())) {
-                        dayLength = h;
-                    }
-                }
-            }
-        }
-        // Desktop only
-        if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-            get("grades").appendChild(document.createElement("p"));
-            let column = document.createElement("div");
-            for (let h = 0; h <= dayLength; h++) {
-                let time = document.createElement("p");
-                time.innerText = h.toString();
-                column.appendChild(time);
-            }
-            get("subjects").appendChild(column);
-        }
-        for (let c = 0; c < schedule.grades.length; c++) {
-            let grade = schedule.grades[c];
-            let column = document.createElement("div");
-            let name = document.createElement("p");
-            name.innerText = grade.name;
-            if (grade.hasOwnProperty("subjects")) {
-                if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-                    for (let h = 0; h <= dayLength; h++) {
-                        let name = document.createElement("p");
-                        if (grade.subjects.hasOwnProperty(h)) {
-                            if (grade.subjects[h].hasOwnProperty("name")) {
-                                name.innerText = grade.subjects[h.toString()].name;
-                            }
+    if (schedule.hasOwnProperty("schedule")) {
+        if (schedule.hasOwnProperty("grades")) {
+            // Figure out day's length
+            let dayLength = 0;
+            for (let c = 0; c < schedule.grades.length; c++) {
+                let grade = schedule.grades[c];
+                if (grade.hasOwnProperty("subjects")) {
+                    for (let h = 0; h < 15; h++) {
+                        if (h > dayLength && grade.subjects.hasOwnProperty(h.toString())) {
+                            dayLength = h;
                         }
-                        if (name.innerText.length === 0) name.style.backgroundColor = "transparent";
-                        column.appendChild(name);
                     }
-                    get("subjects").appendChild(column);
-                } else {
-                    name.onclick = () => subjects_load(subjects_load, dayLength, "subjects");
                 }
             }
-            get("grades").appendChild(name);
-        }
+            // Desktop only
+            if (ORIENTATION === ORIENTATION_HORIZONTAL) {
+                get("grades").appendChild(document.createElement("p"));
+                let column = document.createElement("div");
+                for (let h = 0; h <= dayLength; h++) {
+                    let time = document.createElement("p");
+                    time.innerText = h.toString();
+                    column.appendChild(time);
+                }
+                get("subjects").appendChild(column);
+            }
+            for (let c = 0; c < schedule.grades.length; c++) {
+                let grade = schedule.grades[c];
+                let name = document.createElement("p");
+                name.innerText = grade.name;
+                if (grade.hasOwnProperty("subjects")) {
+                    if (ORIENTATION === ORIENTATION_HORIZONTAL) {
+                        let column = document.createElement("div");
 
+                        apply({
+                            style: {
+                                flexDirection: "column"
+                            }
+                        }, column);
+
+                        subjects_load(schedule.schedule, grade.subjects, dayLength, true, column);
+
+                        get("subjects").appendChild(column);
+                    } else {
+                        name.onclick = () => subjects_load(schedule.schedule, grade.subjects, dayLength, false, "subjects");
+                    }
+                }
+                get("grades").appendChild(name);
+            }
+        }
     }
 }
 
+function subjects_load(schedule, subjects, dayLength, v, minimal = true) {
+    clear(v);
+    for (let h = 0; h <= dayLength; h++) {
+        let subject = document.createElement("div");
+        let top = document.createElement("p");
+        if (subjects.hasOwnProperty(h)) {
+            let current = subjects[h];
+            if (current.hasOwnProperty("name")) {
+                top.innerText = "\u200F" + ((!minimal) ? h + ". " : "") + current.name;
+            }
+            subject.appendChild(top);
+            if (!minimal) {
+                if (current.hasOwnProperty("teachers")) {
+                    let bottom = document.createElement("div");
+                    let time = document.createElement("p");
+                    let teachers = document.createElement("p");
+
+                    apply({
+                        style: {
+                            flexDirection: "row",
+                            direction: "ltr"
+                        }
+                    }, bottom);
+
+                    for (let t = 0; t < current.teachers.length; t++) {
+                        let teacher = current.teachers[t].split(" ")[0];
+                        if (teachers.innerText.length === 0) {
+                            teachers.innerText = teacher;
+                        } else {
+                            teachers.innerText += " · ";
+                            teachers.innerText += teacher;
+                        }
+                    }
+
+                    if (schedule.length > h)
+                        time.innerHTML = schedule_minute_to_time(schedule.schedule[h]) + " - " + schedule_minute_to_time(schedule.schedule[h] + 45);
+
+                    hide(bottom);
+
+                    subject.onclick = () => {
+                        if (!visible(bottom)) {
+                            show(bottom);
+                        } else {
+                            hide(bottom);
+                        }
+                    };
+
+                    bottom.appendChild(time);
+                    bottom.appendChild(teachers);
+                    subject.appendChild(bottom);
+                }
+            }
+        }
+
+        if (minimal) {
+            apply({
+                style: {
+                    backgroundColor: "transparent"
+                }
+            });
+        }
+
+        if (subjects.hasOwnProperty(h) || minimal)
+            get(v).appendChild(subject);
+
+    }
+}
 
 function desktop_grades_load(schedule) {
     clear("desktop-schedule-subjects");
