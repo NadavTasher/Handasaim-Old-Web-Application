@@ -3,6 +3,17 @@ const SCHEDULE_ENDPOINTS = [
     "https://raw.githubusercontent.com/HWBB/LastResort/master/files/schedule.json"
 ];
 
+const SCHEDULE_DAYS = [
+    "יום כלשהו",
+    "ראשון",
+    "שני",
+    "שלישי",
+    "רביעי",
+    "חמישי",
+    "שישי",
+    "שבת"
+];
+
 function schedule_load(callback) {
     fetch(SCHEDULE_ENDPOINTS[0], {
         method: "get"
@@ -13,7 +24,7 @@ function schedule_load(callback) {
     });
 }
 
-function schedule_minute_to_time(minute) {
+function schedule_time(minute) {
     const minutes = minute % 60;
     let time = "";
     time += (minute - minutes) / 60;
@@ -21,6 +32,11 @@ function schedule_minute_to_time(minute) {
     time += (minutes < 10) ? "0" : "";
     time += minutes;
     return time;
+}
+
+function schedule_day(day) {
+    if (day < SCHEDULE_DAYS.length)
+        return SCHEDULE_DAYS[day];
 }
 
 function schedule_has_cookie(name) {

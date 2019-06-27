@@ -8,6 +8,10 @@ html {
 
 /* Global Design */
 
+#glance {
+    min-width: 30vw;
+}
+
 #dashboard {
     flex-direction: row;
     height: 18vh;
