@@ -61,14 +61,16 @@ function apply(configuration, target = null) {
         }
     } else {
         target = get(target);
-        if (target !== null) {
-            for (let property in configuration) {
-                if (configuration.hasOwnProperty(property)) {
-                    if (typeof configuration[property] === typeof {}) {
-                        if (!target.hasOwnProperty(property)) target[property] = {};
-                        apply(configuration[property], target[property]);
-                    } else {
-                        target[property] = configuration[property];
+        if (!isString(target)) {
+            if (target !== null) {
+                for (let property in configuration) {
+                    if (configuration.hasOwnProperty(property)) {
+                        if (isObject(configuration[property])) {
+                            if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
+                            apply(configuration[property], target[property]);
+                        } else {
+                            target[property] = configuration[property];
+                        }
                     }
                 }
             }
@@ -105,7 +107,7 @@ function exists(v) {
 }
 
 function get(v) {
-    return (typeof "" === typeof v || typeof '' === typeof v) ? document.getElementById(v) : v;
+    return isString(v) ? document.getElementById(v) : v;
 }
 
 function gestures(up = null, down = null, left = null, right = null, upgoing = null, downgoing = null, leftgoing = null, rightgoing = null) {
@@ -170,6 +172,18 @@ function html(callback = null) {
             });
         });
     });
+}
+
+function isArray(a) {
+    return typeof [] === typeof a;
+}
+
+function isObject(o) {
+    return typeof {} === typeof o;
+}
+
+function isString(s) {
+    return (typeof "" === typeof s || typeof '' === typeof s);
 }
 
 function show(v) {

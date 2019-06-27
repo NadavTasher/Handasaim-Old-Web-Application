@@ -14,10 +14,6 @@ html {
     overflow: hidden;
 }
 
-#subjects p {
-
-}
-
 #message {
     width: 100%;
 }
@@ -30,19 +26,13 @@ html {
     color: #FFFFFF;
 }
 
-#grades > p, #subjects p {
-    overflow: hidden;
-    min-width: 50px;
-    max-width: 50px;
-    width: 50px;
-    height: 8vh;
-    background-color: #ddddee;
-    border-radius: 1vh;
-    border-color: transparent;
-    padding: 1vw;
+#schedule div {
+    padding: 1vh;
+    margin: 1vh;
+
 }
 
-#grades,#subjects {
+#grades, #subjects {
     overflow-x: scroll;
     flex-direction: row;
     justify-content: space-between;
