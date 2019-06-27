@@ -192,6 +192,21 @@ function isString(s) {
     return (typeof "" === typeof s || typeof '' === typeof s);
 }
 
+function make(type, content = null, configurations = null) {
+    let made = document.createElement(type);
+    if (content !== null) {
+        if (!isString(content)) {
+            made.appendChild(content);
+        } else {
+            made.innerText = content;
+        }
+    }
+    if (configurations !== null) {
+        apply(configurations, made);
+    }
+    return made;
+}
+
 function show(v) {
     get(v).style.removeProperty("display");
 }
