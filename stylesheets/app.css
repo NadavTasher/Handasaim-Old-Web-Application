@@ -40,6 +40,10 @@ html {
     overflow: hidden;
 }
 
+#grades{
+    min-height: min-content;
+}
+
 #grades, #subjects {
     overflow-x: scroll;
     flex-direction: row;
@@ -53,9 +57,9 @@ html {
 
 #subjects {
     flex-direction: row;
-    height: 69vh;
-    min-height: 69vh;
-    max-height: 69vh;
+    height: 60vh;
+    min-height: 60vh;
+    max-height: 60vh;
 }
 
 #subjects::-webkit-scrollbar {
