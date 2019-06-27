@@ -26,10 +26,14 @@ html {
     color: #FFFFFF;
 }
 
-#schedule div {
+#schedule {
     padding: 1vh;
-    margin: 1vh;
+}
 
+#schedule p {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
 }
 
 #grades, #subjects {

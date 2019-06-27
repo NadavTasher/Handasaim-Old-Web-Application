@@ -14,7 +14,6 @@ const TIGHT_X = {
         maxWidth: "8vh",
         minWidth: "8vh",
         width: "8vh",
-        // overflow: "hidden"
     }
 };
 
@@ -23,7 +22,6 @@ const TIGHT_Y = {
         maxHeight: TIGHT_X.style.maxWidth,
         minHeight: TIGHT_X.style.minWidth,
         height: TIGHT_X.style.width,
-        // overflow: "hidden"
     }
 };
 
@@ -32,7 +30,8 @@ const SUBJECT = {
         backgroundColor: "#ddddee",
         borderRadius: "1vh",
         borderColor: "transparent",
-        // padding: "1vw"
+        padding: "1vh",
+        margin: "1vh"
     }
 };
 
@@ -40,11 +39,11 @@ const MOBILE = {
     grades: {
         style: {
             overflowX: "scroll",
-            margin: "1vh"
         }
     },
     subjects: {
         style: {
+            overflowX: "scroll",
             flexDirection: "column"
         }
     }
@@ -58,6 +57,7 @@ const DESKTOP = {
     },
     subjects: {
         style: {
+            overflowX: "hidden",
             flexDirection: "row"
         }
     }
@@ -80,7 +80,7 @@ function load() {
     if (ORIENTATION === ORIENTATION_HORIZONTAL) {
         // desktop_load();
         apply(DESKTOP);
-        desktop();
+        // desktop();
     } else {
         apply(MOBILE);
         // mobile();
@@ -134,12 +134,7 @@ function make(what, content = null, configurations = null) {
         }
     }
     if (configurations !== null) {
-        if (isArray(configurations)) {
-            for (let c = 0; c < configurations.length; c++) {
-                if (isObject(configurations[c]))
-                    apply(configurations[c], thing);
-            }
-        }
+        apply(configurations, thing);
     }
     return thing;
 }
@@ -163,16 +158,16 @@ function grades(schedule) {
             }
             // Desktop only
             if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-                get("grades").appendChild(make("div", make("p", null, [TIGHT_X, TIGHT_Y, SUBJECT]), [TIGHT_X, TIGHT_Y, SUBJECT]));
-                let column = make("div");
+                get("grades").appendChild(make("div", make("p", null), [TIGHT_X, TIGHT_Y, SUBJECT]));
+                let column = make("div", null);
                 for (let h = 0; h <= dayLength; h++) {
-                    column.appendChild(make("p", h.toString(), [TIGHT_X, TIGHT_Y, SUBJECT]));
+                    column.appendChild(make("div", make("p", h.toString()), [TIGHT_X, TIGHT_Y, SUBJECT]));
                 }
                 get("subjects").appendChild(column);
             }
             for (let c = 0; c < schedule.grades.length; c++) {
                 let grade = schedule.grades[c];
-                let name = make("div", make("p", grade.name, [TIGHT_X, TIGHT_Y, SUBJECT]), [TIGHT_X, TIGHT_Y, SUBJECT]);
+                let name = make("div", make("p", grade.name), [TIGHT_X, TIGHT_Y, SUBJECT]);
                 if (grade.hasOwnProperty("subjects")) {
                     if (ORIENTATION === ORIENTATION_HORIZONTAL) {
                         let column = document.createElement("div");
@@ -183,7 +178,7 @@ function grades(schedule) {
                             }
                         }, column);
 
-                        apply(TIGHT_X, column);
+                        // apply(TIGHT_X, column);
 
                         subjects_load(schedule.schedule, grade.subjects, dayLength, column, true);
 
@@ -215,11 +210,13 @@ function subjects_load(schedule, subjects, dayLength, v, minimal = true) {
                     let bottom = document.createElement("div");
                     let time = document.createElement("p");
                     let teachers = document.createElement("p");
-
+                    apply(TIGHT_Y, top);
+                    apply(TIGHT_Y, bottom);
                     apply({
                         style: {
                             flexDirection: "row",
-                            direction: "ltr"
+                            direction: "ltr",
+                            justifyContent: "space-evenly"
                         }
                     }, bottom);
 
