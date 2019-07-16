@@ -201,7 +201,7 @@ function grades_load(schedule) {
     }
 }
 
-function copyables_load(schedule, grade, seperator = "<br/>") {
+function copyables_load(schedule, grade, seperator = "\n") {
 
     let gradeShare = (name, subjects) => {
         let text = name + seperator + seperator;
@@ -364,13 +364,7 @@ function mobile_load(schedule) {
 }
 
 function share(v, text) {
-    v = get(v);
-    v.onclick = () => {
-        let before = v.value;
-        v.value = text;
-        v.select();
-        document.execCommand("share");
-        v.value = before;
+    get(v).onclick = () => {
         window.location = "whatsapp://send?text=" + text;
     };
 }
