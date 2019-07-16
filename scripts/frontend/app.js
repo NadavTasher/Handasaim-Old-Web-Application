@@ -40,27 +40,29 @@ const MOBILE = {
     grades: {
         style: {
             overflowX: "scroll",
+            margin: "1vh"
         }
     },
     subjects: {
         style: {
-            overflowX: "scroll",
-            flexDirection: "column"
-        }
+            overflowX: "scroll"
+        },
+        column: true
     }
 };
 
 const DESKTOP = {
     grades: {
         style: {
-            overflowX: "hidden"
+            overflowX: "hidden",
+            margin: "0"
         }
     },
     subjects: {
         style: {
-            overflowX: "hidden",
-            flexDirection: "row"
-        }
+            overflowX: "hidden"
+        },
+        row: true
     }
 };
 

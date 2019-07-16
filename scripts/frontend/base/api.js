@@ -3,25 +3,32 @@
  * https://github.com/NadavTasher/WebAppBase/
  **/
 
-function animate(v, from, to, seconds, property, keep = false, callback = null) {
-    let view = get(v);
-    view.removeAttribute("style");
-    let position = getComputedStyle(view).position;
-    if (position === "static" || position === "sticky") {
-        view.style.position = "relative";
-    }
-    try {
-        view.animate([{[property]: from}, {[property]: to}], {
-            duration: seconds * 1000,
-            fill: keep ? "forwards" : "backwards",
-            easing: "linear"
-        }).onfinish = () => {
-            if (callback !== null) callback();
-        };
-    } catch (e) {
-        if (callback !== null) callback();
-    }
+const LEFT = false;
+const RIGHT = !LEFT;
+const IN = true;
+const OUT = !IN;
 
+function animate(v, parameters, callback = null) {
+    let view = get(v);
+    let removeStyles = () => {
+        view.style.removeProperty("position");
+        view.style.removeProperty("transitionDuration");
+        view.style.removeProperty("transitionTimingFunction");
+        view.style.removeProperty(parameters.name);
+    };
+    removeStyles();
+    if (getComputedStyle(view).position === "static" || getComputedStyle(view).position === "sticky")
+        view.style.position = "relative";
+    view.style.transitionDuration = parameters.length + "s";
+    view.style.transitionTimingFunction = "ease";
+    view.style[parameters.name] = parameters.origin;
+    setTimeout(() => {
+        view.style[parameters.name] = parameters.destination;
+        setTimeout(() => {
+            if (!parameters.preserve) removeStyles();
+            if (callback !== null) callback();
+        }, parameters.length * 1000);
+    }, 100 + parameters.delay * 1000);
 }
 
 function api(endpoint = null, api = null, action = null, parameters = null, callback = null, form = body()) {
@@ -70,7 +77,11 @@ function apply(configurations, target = null) {
                                 if ((target.hasAttribute !== undefined && !target.hasAttribute(property)) || (target.hasAttribute === undefined && !target.hasOwnProperty(property))) target[property] = {};
                                 apply(configurations[property], target[property]);
                             } else {
-                                target[property] = configurations[property];
+                                if (target.setAttribute !== undefined) {
+                                    target.setAttribute(property, configurations[property]);
+                                } else {
+                                    target[property] = configurations[property];
+                                }
                             }
                         }
                     }
@@ -207,8 +218,37 @@ function make(type, content = null, configurations = null) {
     return made;
 }
 
+function page(from, to, callback = null) {
+    transition(from, OUT, () => {
+        let temporary = get(to);
+        while (temporary.parentNode !== get(from).parentNode && temporary.parentNode !== document.body) {
+            view(temporary);
+            temporary = temporary.parentNode;
+        }
+        view(temporary);
+        transition(to, IN, callback);
+    });
+}
+
 function show(v) {
     get(v).style.removeProperty("display");
+}
+
+function slide(v, motion = IN, direction = RIGHT, length = 0.2, delay = 0, callback = null) {
+    let view = get(v);
+    let style = getComputedStyle(view);
+    let edge = (direction === RIGHT ? 1 : -1) * screen.width;
+    let current = isNaN(parseInt(style.left)) ? 0 : parseInt(style.left);
+    let origin = current === 0 && motion === IN ? edge : current;
+    let destination = motion === IN ? 0 : edge;
+    animate(view, {
+        name: "left",
+        origin: origin + "px",
+        destination: destination + "px",
+        length: length,
+        delay: delay,
+        preserve: true
+    }, callback);
 }
 
 function theme(color) {
@@ -228,6 +268,13 @@ function title(title) {
     document.title = title;
 }
 
+function transition(v, type = OUT, callback = null) {
+    let element = get(v);
+    for (let n = 0; n < element.children.length; n++) {
+        slide(element.children[n], type, RIGHT, 0.4, 0.2 * n, n === element.children.length - 1 ? callback : null);
+    }
+}
+
 function view(v) {
     let element = get(v);
     let parent = element.parentNode;
@@ -239,15 +286,6 @@ function view(v) {
 
 function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
-}
-
-function slide(v, motion = true, direction = true, callback = null) {
-    let offsets = {
-        right: window.innerWidth - (get(v).getBoundingClientRect().right - get(v).offsetWidth),
-        left: -(get(v).getBoundingClientRect().left + get(v).offsetWidth)
-    };
-    let offset = direction ? offsets.right : offsets.left;
-    animate(v, (motion ? offset : 0) + "px", (!motion ? offset : 0) + "px", 0.2, "left", false, callback);
 }
 
 function worker(w = "worker.js") {
