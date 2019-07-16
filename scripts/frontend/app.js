@@ -204,7 +204,7 @@ function grades_load(schedule) {
 function copyables_load(schedule, grade, seperator = "\n") {
 
     let gradeShare = (name, subjects) => {
-        let text = name + seperator + seperator;
+        let text = name + seperator;
         for (let h = 0; h <= 15; h++) {
             if (subjects.hasOwnProperty(h)) {
                 let current = subjects[h];
@@ -231,15 +231,15 @@ function copyables_load(schedule, grade, seperator = "\n") {
 
     if (schedule.hasOwnProperty("messages")) {
         if (schedule.messages.length > 0) {
-            complete += "Messages: " + seperator;
+            complete += seperator;
             for (let m = 0; m < schedule.messages.length; m++) {
                 complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + seperator;
             }
         }
     }
 
-    share("share-single", gradeShare(grade.name, grade.subjects));
-    share("share-multiple", complete);
+    schedule_share("schedule_share-single", gradeShare(grade.name, grade.subjects));
+    schedule_share("schedule_share-multiple", complete);
 }
 
 function subjects_load(schedule, subjects, v, dayLength = null) {
@@ -361,10 +361,4 @@ function mobile_load(schedule) {
     } else {
         get("subjects").appendChild(make("p", "Select your class with the bar above!"));
     }
-}
-
-function share(v, text) {
-    get(v).onclick = () => {
-        window.location = "whatsapp://send?text=" + text;
-    };
 }
