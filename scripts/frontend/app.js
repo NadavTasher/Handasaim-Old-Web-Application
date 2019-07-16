@@ -70,7 +70,8 @@ const DESKTOP = {
     },
     subjects: {
         style: {
-            overflowX: "hidden"
+            overflowX: "hidden",
+            alignItems: "start"
         },
         row: true
     }
