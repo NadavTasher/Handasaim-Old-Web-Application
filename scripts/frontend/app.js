@@ -37,6 +37,11 @@ const SUBJECT = {
 };
 
 const MOBILE = {
+    message: {
+        style: {
+            overflowY: "scroll"
+        }
+    },
     grades: {
         style: {
             overflowX: "scroll",
@@ -52,6 +57,11 @@ const MOBILE = {
 };
 
 const DESKTOP = {
+    message: {
+        style: {
+            overflowY: "hidden"
+        }
+    },
     grades: {
         style: {
             overflowX: "hidden",
@@ -80,9 +90,11 @@ function load() {
         grades_load(schedule, null);
         if (ORIENTATION === ORIENTATION_HORIZONTAL) {
             apply(DESKTOP);
+            hide("ui");
             desktop_load();
         } else {
             apply(MOBILE);
+            show("ui");
             mobile_load(schedule);
         }
     });
@@ -129,7 +141,8 @@ function grade_load(schedule, day, grade) {
     if (grade.hasOwnProperty("name") && grade.hasOwnProperty("subjects")) {
         schedule_push_cookie(GRADE_COOKIE, grade.name);
         glance(grade.name, schedule_day(day));
-        subjects_load(schedule, grade.subjects, "subjects", null);
+        copyables_load(schedule, grade);
+        subjects_load(schedule.schedule, grade.subjects, "subjects", null);
     }
 }
 
@@ -178,7 +191,7 @@ function grades_load(schedule) {
 
                             get("subjects").appendChild(column);
                         } else {
-                            name.onclick = () => grade_load(schedule.schedule, schedule.day, grade);
+                            name.onclick = () => grade_load(schedule, schedule.day, grade);
                         }
                     }
                     get("grades").appendChild(name);
@@ -186,6 +199,47 @@ function grades_load(schedule) {
             }
         }
     }
+}
+
+function copyables_load(schedule, grade) {
+
+    let gradeShare = (name, subjects) => {
+        let text = name + "\n\n";
+        for (let h = 0; h <= 15; h++) {
+            if (subjects.hasOwnProperty(h)) {
+                let current = subjects[h];
+                if (current.hasOwnProperty("name")) {
+                    text += "\u200F" + h + ". " + current.name + "\n";
+                }
+            }
+        }
+        return text;
+    };
+
+    let complete = "";
+
+    if (schedule.hasOwnProperty("grades")) {
+        for (let g = 0; g < schedule.grades.length; g++) {
+            let current = schedule.grades[g];
+            if (current.hasOwnProperty("grade") && grade.hasOwnProperty("grade")) {
+                if (current.grade === grade.grade) {
+                    complete += gradeShare(current.name, current.subjects) + "\n\n";
+                }
+            }
+        }
+    }
+
+    if (schedule.hasOwnProperty("messages")) {
+        if (schedule.messages.length > 0) {
+            complete += "Messages: \n";
+            for (let m = 0; m < schedule.messages.length; m++) {
+                complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + "\n";
+            }
+        }
+    }
+
+    share("share-single", gradeShare(grade.name, grade.subjects));
+    share("share-multiple", complete);
 }
 
 function subjects_load(schedule, subjects, v, dayLength = null) {
@@ -300,11 +354,23 @@ function mobile_load(schedule) {
             let name = schedule_pull_cookie(GRADE_COOKIE);
             for (let g = 0; g < schedule.grades.length; g++) {
                 if (schedule.grades[g].hasOwnProperty("name") && schedule.grades[g].hasOwnProperty("subjects")) {
-                    if (schedule.grades[g].name === name) grade_load(schedule.schedule, schedule.day, schedule.grades[g]);
+                    if (schedule.grades[g].name === name) grade_load(schedule, schedule.day, schedule.grades[g]);
                 }
             }
         }
     } else {
         get("subjects").appendChild(make("p", "Select your class with the bar above!"));
     }
+}
+
+function share(v, text) {
+    v = get(v);
+    v.onclick = () => {
+        let before = v.value;
+        v.value = text;
+        v.select();
+        document.execCommand("share");
+        v.value = before;
+        window.location = "whatsapp://send?text=" + text;
+    };
 }
