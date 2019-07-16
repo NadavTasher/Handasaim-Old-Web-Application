@@ -30,7 +30,8 @@ html {
 }
 
 #message {
-    height: 100%;
+    align-content: start;
+    max-height: 100%;
     width: 100%;
 }
 
