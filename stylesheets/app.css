@@ -20,6 +20,8 @@ html {
 }
 
 #dashboard {
+    margin: 1vh;
+    padding: 1vh;
     height: 18vh;
     overflow: hidden;
 }
