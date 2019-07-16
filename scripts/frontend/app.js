@@ -201,15 +201,15 @@ function grades_load(schedule) {
     }
 }
 
-function copyables_load(schedule, grade) {
+function copyables_load(schedule, grade, seperator = "<br/>") {
 
     let gradeShare = (name, subjects) => {
-        let text = name + "\n\n";
+        let text = name + seperator + seperator;
         for (let h = 0; h <= 15; h++) {
             if (subjects.hasOwnProperty(h)) {
                 let current = subjects[h];
                 if (current.hasOwnProperty("name")) {
-                    text += "\u200F" + h + ". " + current.name + "\n";
+                    text += "\u200F" + h + ". " + current.name + seperator;
                 }
             }
         }
@@ -223,7 +223,7 @@ function copyables_load(schedule, grade) {
             let current = schedule.grades[g];
             if (current.hasOwnProperty("grade") && grade.hasOwnProperty("grade")) {
                 if (current.grade === grade.grade) {
-                    complete += gradeShare(current.name, current.subjects) + "\n\n";
+                    complete += gradeShare(current.name, current.subjects) + seperator + seperator;
                 }
             }
         }
@@ -231,9 +231,9 @@ function copyables_load(schedule, grade) {
 
     if (schedule.hasOwnProperty("messages")) {
         if (schedule.messages.length > 0) {
-            complete += "Messages: \n";
+            complete += "Messages: " + seperator;
             for (let m = 0; m < schedule.messages.length; m++) {
-                complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + "\n";
+                complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + seperator;
             }
         }
     }
