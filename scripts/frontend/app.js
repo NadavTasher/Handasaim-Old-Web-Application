@@ -101,9 +101,8 @@ function load() {
 
 }
 
-function glance(top, bottom) {
+function glance(top) {
     get("top").innerText = top;
-    get("bottom").innerText = bottom;
 }
 
 function messages_load(schedule) {
@@ -140,7 +139,7 @@ function background_load(top, bottom) {
 function grade_load(schedule, day, grade) {
     if (grade.hasOwnProperty("name") && grade.hasOwnProperty("subjects")) {
         schedule_push_cookie(GRADE_COOKIE, grade.name);
-        glance(grade.name, schedule_day(day));
+        glance(grade.name);
         copyables_load(schedule, grade);
         subjects_load(schedule.schedule, grade.subjects, "subjects", null);
     }
@@ -238,8 +237,8 @@ function copyables_load(schedule, grade, seperator = "\n") {
         }
     }
 
-    schedule_share("schedule_share-single", gradeShare(grade.name, grade.subjects));
-    schedule_share("schedule_share-multiple", complete);
+    schedule_share("share-single", gradeShare(grade.name, grade.subjects));
+    schedule_share("share-multiple", complete);
 }
 
 function subjects_load(schedule, subjects, v, dayLength = null) {
@@ -341,7 +340,7 @@ function desktop_load() {
     }, DESKTOP_SCROLL_INTERVAL);
     let update = () => {
         let now = new Date();
-        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), now.getDate() + "." + (now.getMonth() + 1) + "." + now.getFullYear());
+        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()));
     };
     setInterval(update, DESKTOP_TIME_REFRESH_INTERVAL);
     setInterval(load, DESKTOP_SCHEDULE_REFRESH_INTERVAL);
