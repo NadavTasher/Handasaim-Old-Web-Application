@@ -89,13 +89,12 @@ function load() {
     schedule_load((schedule) => {
         messages_load(schedule);
         grades_load(schedule, null);
+        hide("ui");
         if (ORIENTATION === ORIENTATION_HORIZONTAL) {
             apply(DESKTOP);
-            hide("ui");
             desktop_load();
         } else {
             apply(MOBILE);
-            show("ui");
             mobile_load(schedule);
         }
     });
@@ -142,6 +141,7 @@ function grade_load(schedule, day, grade) {
         schedule_push_cookie(GRADE_COOKIE, grade.name);
         glance(grade.name);
         copyables_load(schedule, grade);
+        show("ui");
         subjects_load(schedule.schedule, grade.subjects, "subjects", null);
     }
 }
@@ -359,6 +359,6 @@ function mobile_load(schedule) {
             }
         }
     } else {
-        get("subjects").appendChild(make("p", "Select your class with the bar above!"));
+        get("subjects").appendChild(make("p", "↑", {style: {fontSize: "60vh", color: "#FFFFFF"}}));
     }
 }
