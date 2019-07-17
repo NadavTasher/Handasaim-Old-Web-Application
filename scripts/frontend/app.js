@@ -275,7 +275,11 @@ function subjects_load(schedule, subjects, v, dayLength = null) {
                             direction: "ltr"
                         }
                     }, bottom);
-
+                    apply({
+                        style: {
+                            minHeight: "min-content"
+                        }
+                    }, subject);
                     for (let t = 0; t < current.teachers.length; t++) {
                         let teacher = current.teachers[t].split(" ")[0];
                         if (teachers.innerText.length === 0) {
