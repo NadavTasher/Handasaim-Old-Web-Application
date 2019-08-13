@@ -134,8 +134,8 @@ function messages_load(schedule) {
 function background_load(top, bottom) {
     document.body.style.backgroundImage = "linear-gradient(to bottom," + top + ", " + bottom + ")";
     document.body.style.backgroundColor = top;
-    if (window.hasOwnProperty("theme")) {
-        window.theme.color(top, bottom);
+    if (window.hasOwnProperty("android")) {
+        window.android.colors(top, bottom);
     }
 }
 
