@@ -239,12 +239,10 @@ function subjects_load(schedule, subjects, v, dayLength = null) {
 
 function desktop_load() {
 
-    get("grades").style.overflowX = "hidden";
-    get("grades").style.margin = "0";
+    get("grades").setAttribute("mobile", false);
 
     row("subjects");
-    get("subjects").style.overflowX = "hidden";
-    get("subjects").style.alignItems = "start";
+    get("subjects").setAttribute("mobile", false);
 
     // Scroll load
     let desktopScrollDirection = true, desktopScrollPaused = false;
@@ -272,11 +270,10 @@ function desktop_load() {
 
 function mobile_load(schedule) {
 
-    get("grades").style.overflowX = "scroll";
-    get("grades").style.margin = "1vh";
+    get("grades").setAttribute("mobile", true);
 
     column("subjects");
-    get("subjects").style.overflowX = "scroll";
+    get("subjects").setAttribute("mobile", true);
 
     if (schedule_has_cookie(GRADE_COOKIE)) {
         if (schedule.hasOwnProperty("schedule") && schedule.hasOwnProperty("day") && schedule.hasOwnProperty("grades")) {
@@ -288,8 +285,11 @@ function mobile_load(schedule) {
             }
         }
     } else {
+        hide("glance");
         let tutorial = make("p", "Select a class from above");
         tutorial.style.height = "100%";
+        tutorial.style.fontSize = "10vh";
+        tutorial.style.color = "#FFFFFF";
         get("subjects").appendChild(tutorial);
     }
 }
@@ -300,6 +300,7 @@ function switcher_open() {
 }
 
 function switcher_close() {
+    show("glance");
     hide("grades");
     get("subjects").style.height = "100%";
 }
