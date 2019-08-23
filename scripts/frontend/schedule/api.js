@@ -63,3 +63,9 @@ function schedule_push_cookie(name, value) {
     date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
     document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + date.toUTCString() + ";domain=" + window.location.hostname + ";path=/";
 }
+
+function schedule_ios_install(){
+    // if (/iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) && !(window.navigator.hasOwnProperty("standalone") && window.navigator.standalone)) {
+    //     this.setState({showInstallMessage: true});
+    // }
+}

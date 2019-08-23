@@ -91,9 +91,6 @@ function worker(w = "worker.js") {
         navigator.serviceWorker.register(w).then((result) => {
         });
     }
-    if (/iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) && !(window.navigator.hasOwnProperty("standalone") && window.navigator.standalone)) {
-        this.setState({showInstallMessage: true});
-    }
 }
 
 /* Visuals */
