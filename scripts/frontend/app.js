@@ -8,75 +8,6 @@ const
     bottomColor = "#00827E",
     topColor = "#00649C";
 
-const SIZE = "8vh";
-
-const TIGHT_X = {
-    style: {
-        maxWidth: SIZE,
-        minWidth: SIZE,
-        width: SIZE,
-    }
-};
-
-const TIGHT_Y = {
-    style: {
-        maxHeight: SIZE,
-        minHeight: SIZE,
-        height: SIZE,
-    }
-};
-
-const SUBJECT = {
-    style: {
-        backgroundColor: "#ddddee",
-        borderRadius: "1vh",
-        borderColor: "transparent",
-        padding: "1vh",
-        margin: "1vh"
-    }
-};
-
-const MOBILE = {
-    message: {
-        style: {
-            overflowY: "scroll"
-        }
-    },
-    grades: {
-        style: {
-            overflowX: "scroll",
-            margin: "1vh"
-        }
-    },
-    subjects: {
-        style: {
-            overflowX: "scroll"
-        },
-        column: true
-    }
-};
-
-const DESKTOP = {
-    message: {
-        style: {
-            overflowY: "hidden"
-        }
-    },
-    grades: {
-        style: {
-            overflowX: "hidden",
-            margin: "0"
-        }
-    },
-    subjects: {
-        style: {
-            overflowX: "hidden",
-            alignItems: "start"
-        },
-        row: true
-    }
-};
-
 const ORIENTATION = screen.width > screen.height;
 const ORIENTATION_HORIZONTAL = true;
 const ORIENTATION_VERTICAL = false;
@@ -91,10 +22,8 @@ function load() {
         grades_load(schedule, null);
         hide("ui");
         if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-            apply(DESKTOP);
             desktop_load();
         } else {
-            apply(MOBILE);
             mobile_load(schedule);
         }
     });
@@ -106,8 +35,16 @@ function glance(top) {
 }
 
 function messages_load(schedule) {
+    // Set message overflow behaviour
+    if (ORIENTATION === ORIENTATION_VERTICAL) {
+        get("message").style.overflowY = "scroll";
+    } else {
+        get("message").style.overflowY = "hidden";
+    }
+    // Check for messages in schedule
     if (schedule.hasOwnProperty("messages")) {
         if (schedule.messages.length > 0) {
+            // Sets an interval to switch messages every X(MessageRefreshInterval) seconds
             let index = 0;
             let next = () => {
                 if (schedule.messages.length > 0) {
@@ -140,109 +77,127 @@ function background_load(top, bottom) {
 }
 
 function grade_load(schedule, day, grade) {
-    if (grade.hasOwnProperty("name") && grade.hasOwnProperty("subjects")) {
-        schedule_push_cookie(GRADE_COOKIE, grade.name);
-        glance(grade.name);
-        copyables_load(schedule, grade);
+    if (grade.hasOwnProperty("name") &&
+        grade.hasOwnProperty("subjects")) {
         show("ui");
+        hide("grades");
+        glance(grade.name);
+        sharables_load(schedule, grade);
         subjects_load(schedule.schedule, grade.subjects, "subjects", null);
+        schedule_push_cookie(GRADE_COOKIE, grade.name);
     }
 }
 
 function grades_load(schedule) {
     clear("subjects");
     clear("grades");
-    if (schedule.hasOwnProperty("schedule")) {
-        if (schedule.hasOwnProperty("day")) {
-            if (schedule.hasOwnProperty("grades")) {
-                // Figure out day's length
-                let dayLength = 0;
-                for (let c = 0; c < schedule.grades.length; c++) {
-                    let grade = schedule.grades[c];
-                    if (grade.hasOwnProperty("subjects")) {
-                        for (let h = 0; h < 15; h++) {
-                            if (h > dayLength && grade.subjects.hasOwnProperty(h)) {
-                                dayLength = h;
-                            }
-                        }
+    if (schedule.hasOwnProperty("schedule") &&
+        schedule.hasOwnProperty("day") &&
+        schedule.hasOwnProperty("grades")) {
+        // Figure out day's length
+        let dayLength = 0;
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
+            if (grade.hasOwnProperty("subjects")) {
+                for (let h = 0; h < 15; h++) {
+                    if (h > dayLength && grade.subjects.hasOwnProperty(h)) {
+                        dayLength = h;
                     }
-                }
-                // Desktop only
-                if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-                    get("grades").appendChild(make("div", make("p", null), [TIGHT_X, TIGHT_Y, SUBJECT]));
-                    let column = make("div", null);
-                    for (let h = 0; h <= dayLength; h++) {
-                        column.appendChild(make("div", make("p", h.toString()), [TIGHT_X, TIGHT_Y, SUBJECT]));
-                    }
-                    get("subjects").appendChild(column);
-                }
-                // Scan grades
-                for (let c = 0; c < schedule.grades.length; c++) {
-                    let grade = schedule.grades[c];
-                    let name = make("div", make("p", grade.name), [TIGHT_X, TIGHT_Y, SUBJECT]);
-                    if (grade.hasOwnProperty("subjects")) {
-                        if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-                            let column = document.createElement("div");
-
-                            apply({
-                                style: {
-                                    flexDirection: "column"
-                                }
-                            }, column);
-
-                            subjects_load(schedule.schedule, grade.subjects, column, dayLength);
-
-                            get("subjects").appendChild(column);
-                        } else {
-                            name.onclick = () => grade_load(schedule, schedule.day, grade);
-                        }
-                    }
-                    get("grades").appendChild(name);
                 }
             }
+        }
+        // Desktop only, add empty cell to grades and lesson number column
+        if (ORIENTATION === ORIENTATION_HORIZONTAL) {
+            get("grades").appendChild(make("div", make("p", null), ["padded", "coasted", "minimal"]));
+            let column = make("div", null);
+            for (let h = 0; h <= dayLength; h++) {
+                column.appendChild(make("div", make("p", h.toString()), ["padded", "coasted", "minimal"]));
+            }
+            get("subjects").appendChild(column);
+        }
+        // Scan grades
+        for (let c = 0; c < schedule.grades.length; c++) {
+            let grade = schedule.grades[c];
+            let name = make("div", make("p", grade.name), ["padded", "coasted", "minimal"]);
+            if (grade.hasOwnProperty("subjects")) {
+                if (ORIENTATION === ORIENTATION_HORIZONTAL) {
+                    let current = make("div");
+                    column(current);
+                    subjects_load(schedule.schedule, grade.subjects, current, dayLength);
+                    get("subjects").appendChild(current);
+                } else {
+                    name.onclick = () => {
+                        grade_load(schedule, schedule.day, grade);
+                    };
+                }
+            }
+            get("grades").appendChild(name);
         }
     }
 }
 
-function copyables_load(schedule, grade, seperator = "\n") {
-
-    let gradeShare = (name, subjects) => {
-        let text = name + seperator;
+function export_grade(grade, separator = "\n") {
+    if (grade.hasOwnProperty("name") &&
+        grade.hasOwnProperty("subjects")) {
+        let text = name + separator;
         for (let h = 0; h <= 15; h++) {
-            if (subjects.hasOwnProperty(h)) {
-                let current = subjects[h];
+            if (grade.subjects.hasOwnProperty(h)) {
+                let current = grade.subjects[h];
                 if (current.hasOwnProperty("name")) {
-                    text += "\u200F" + h + ". " + current.name + seperator;
+                    text += "\u200F" + h + ". " + current.name + separator;
                 }
             }
         }
         return text;
-    };
+    }
+    return "Invalid grade, oops.";
+}
 
+function sharables_load(schedule, grade, separator = "\n") {
     let complete = "";
-
     if (schedule.hasOwnProperty("grades")) {
         for (let g = 0; g < schedule.grades.length; g++) {
             let current = schedule.grades[g];
             if (current.hasOwnProperty("grade") && grade.hasOwnProperty("grade")) {
                 if (current.grade === grade.grade) {
-                    complete += gradeShare(current.name, current.subjects) + seperator + seperator;
+                    complete += export_grade(current, separator) + separator + separator;
                 }
             }
         }
     }
-
     if (schedule.hasOwnProperty("messages")) {
         if (schedule.messages.length > 0) {
-            complete += seperator;
+            complete += separator;
             for (let m = 0; m < schedule.messages.length; m++) {
-                complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + seperator;
+                complete += "\u200F" + (m + 1) + ". " + schedule.messages[m] + separator;
             }
         }
     }
+    get("share-single").onclick = schedule_share(export_grade(grade, separator));
+    get("share-multiple").onclick = schedule_share(complete);
+}
 
-    schedule_share("share-single", gradeShare(grade.name, grade.subjects));
-    schedule_share("share-multiple", complete);
+function teachers_text(subject) {
+    let teachers = "";
+    if (subject.hasOwnProperty("teachers")) {
+        for (let t = 0; t < subject.teachers.length; t++) {
+            let teacher = subject.teachers[t].split(" ")[0];
+            if (teachers.length === 0) {
+                teachers = teacher;
+            } else {
+                teachers += " · ";
+                teachers += teacher;
+            }
+        }
+    }
+    return teachers;
+}
+
+function time_text(schedule, hour) {
+    if (schedule.length > hour)
+        return schedule_time(schedule[hour]) + " - " + schedule_time(schedule[hour] + 45);
+
+    return "";
 }
 
 function subjects_load(schedule, subjects, v, dayLength = null) {
@@ -250,87 +205,47 @@ function subjects_load(schedule, subjects, v, dayLength = null) {
     let scan = (!minimal) ? 15 : dayLength;
     clear(v);
     for (let h = 0; h <= scan; h++) {
-        let subject = document.createElement("div");
-        let top = document.createElement("p");
-        apply(SUBJECT, subject);
+        let subject;
         if (subjects.hasOwnProperty(h)) {
             let current = subjects[h];
-            if (current.hasOwnProperty("name")) {
-                top.innerText = "\u200F" + ((!minimal) ? h + ". " : "") + current.name;
-            }
-            subject.appendChild(top);
-            if (!minimal) {
-                if (current.hasOwnProperty("teachers")) {
-                    let bottom = document.createElement("div");
-                    let time = document.createElement("p");
-                    let teachers = document.createElement("p");
-                    apply(TIGHT_Y, top);
-                    apply(TIGHT_Y, bottom);
-                    apply({
-                        style: {
-                            alignSelf: "start", margin: "1vh"
-                        }
-                    }, top);
-                    apply({
-                        style: {
-                            flexDirection: "row",
-                            justifyContent: "space-evenly",
-                            direction: "ltr"
-                        }
-                    }, bottom);
-                    apply({
-                        style: {
-                            minHeight: "min-content"
-                        }
-                    }, subject);
-                    for (let t = 0; t < current.teachers.length; t++) {
-                        let teacher = current.teachers[t].split(" ")[0];
-                        if (teachers.innerText.length === 0) {
-                            teachers.innerText = teacher;
-                        } else {
-                            teachers.innerText += " · ";
-                            teachers.innerText += teacher;
-                        }
+            if (minimal) {
+                subject = make("div", null, ["padded", "coasted", "minimal"]);
+                subject.appendChild(make("p", "\u200F" + current.name));
+            } else {
+                subject = make("div", null, ["padded", "coasted", "maximal"]);
+                let bottom = make("div");
+                hide(bottom);
+                row(bottom);
+                bottom.appendChild(make("p", teachers_text(current)));
+                bottom.appendChild(make("p", time_text(schedule, h)));
+                subject.appendChild(make("p", "\u200F" + h.toString() + ". " + current.name));
+                subject.appendChild(bottom);
+                subject.onclick = () => {
+                    if (!visible(bottom)) {
+                        show(bottom);
+                    } else {
+                        hide(bottom);
                     }
-
-                    if (schedule.length > h)
-                        time.innerHTML = schedule_time(schedule[h]) + " - " + schedule_time(schedule[h] + 45);
-
-                    hide(bottom);
-
-                    subject.onclick = () => {
-                        if (!visible(bottom)) {
-                            show(bottom);
-                        } else {
-                            hide(bottom);
-                        }
-                    };
-
-                    bottom.appendChild(time);
-                    bottom.appendChild(teachers);
-                    subject.appendChild(bottom);
-                }
+                };
             }
         } else if (minimal) {
-            apply({
-                style: {
-                    backgroundColor: "transparent"
-                }
-            }, subject);
+            // Add an empty square to make the grid complete.
+            subject = make("div", null, ["padded", "minimal"]);
         }
-
-        if (minimal) {
-            apply(TIGHT_X, subject);
-            apply(TIGHT_Y, subject);
-        }
-
         if (subjects.hasOwnProperty(h) || minimal)
             get(v).appendChild(subject);
-
     }
 }
 
 function desktop_load() {
+
+    get("grades").style.overflowX = "hidden";
+    get("grades").style.margin = "0";
+
+    row("subjects");
+    get("subjects").style.overflowX = "hidden";
+    get("subjects").style.alignItems = "start";
+
     // Scroll load
     let desktopScrollDirection = true, desktopScrollPaused = false;
     setInterval(() => {
@@ -356,6 +271,13 @@ function desktop_load() {
 }
 
 function mobile_load(schedule) {
+
+    get("grades").style.overflowX = "scroll";
+    get("grades").style.margin = "1vh";
+
+    column("subjects");
+    get("subjects").style.overflowX = "scroll";
+
     if (schedule_has_cookie(GRADE_COOKIE)) {
         if (schedule.hasOwnProperty("schedule") && schedule.hasOwnProperty("day") && schedule.hasOwnProperty("grades")) {
             let name = schedule_pull_cookie(GRADE_COOKIE);
@@ -366,6 +288,8 @@ function mobile_load(schedule) {
             }
         }
     } else {
-        get("subjects").appendChild(make("p", "↑", {style: {fontSize: "60vh", color: "#FFFFFF"}}));
+        let tutorial = make("p", "Select a class from above");
+        tutorial.style.height = "100%";
+        get("subjects").appendChild(tutorial);
     }
 }

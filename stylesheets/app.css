@@ -66,9 +66,9 @@ html {
 }
 
 #subjects {
-    height: 60vh;
+    height: 75vh;
     min-height: 60vh;
-    max-height: 60vh;
+    max-height: 75vh;
 }
 
 #subjects::-webkit-scrollbar {
@@ -82,5 +82,34 @@ html {
 
 #ui > * {
     font-family: 'Material Icons', serif;
+    width: 100%;
+}
+
+.padded {
+    padding: 1vh;
+    margin: 1vh;
+}
+
+.coasted {
+    background-color: #ddddee;
+    border-radius: 1vh;
+    border-color: transparent;
+}
+
+.minimal {
+    max-width: 8vh;
+    min-width: 8vh;
+    width: 8vh;
+    max-height: 8vh;
+    min-height: 8vh;
+    height: 8vh;
+}
+
+.maximal > p {
+    justify-content: start;
+    margin: 2vh !important;
+}
+
+.maximal > div > p {
     width: 100%;
 }

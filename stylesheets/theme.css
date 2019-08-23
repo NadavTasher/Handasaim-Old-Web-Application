@@ -83,7 +83,7 @@ textarea {
 }
 
 [input]:hover, button:hover, input:hover, select:hover, textarea:hover {
-    background-color: #aaaabb;
+    background-color: #9999aa;
 }
 
 [row], [column], div, body {
@@ -95,14 +95,14 @@ textarea {
     padding: 0;
 }
 
-[column] {
+[column = ""], [column = "true"] {
     /* Flex */
     flex-direction: column;
     /* Alignment */
     align-items: stretch;
 }
 
-[row] {
+[row = ""], [row = "true"] {
     /* Flex */
     flex-direction: row;
     /* Alignment */

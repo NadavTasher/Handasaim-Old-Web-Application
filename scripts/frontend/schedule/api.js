@@ -64,8 +64,8 @@ function schedule_push_cookie(name, value) {
     document.cookie = name + "=" + encodeURIComponent(value) + ";expires=" + date.toUTCString() + ";domain=" + window.location.hostname + ";path=/";
 }
 
-function schedule_share(v, text) {
-    get(v).onclick = () => {
+function schedule_share(text) {
+    return () => {
         window.location = "whatsapp://send?text=" + encodeURIComponent(text);
     };
 }
