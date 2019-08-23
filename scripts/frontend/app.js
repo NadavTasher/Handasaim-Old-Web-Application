@@ -173,8 +173,14 @@ function sharables_load(schedule, grade, separator = "\n") {
             }
         }
     }
-    get("share-single").onclick = schedule_share(export_grade(grade, separator));
-    get("share-multiple").onclick = schedule_share(complete);
+    get("share-single").onclick = messaging_share(export_grade(grade, separator));
+    get("share-multiple").onclick = messaging_share(complete);
+}
+
+function messaging_share(text) {
+    return () => {
+        window.location = "whatsapp://send?text=" + encodeURIComponent(text);
+    };
 }
 
 function teachers_text(subject) {
