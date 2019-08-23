@@ -80,8 +80,8 @@ function grade_load(schedule, day, grade) {
     if (grade.hasOwnProperty("name") &&
         grade.hasOwnProperty("subjects")) {
         show("ui");
-        hide("grades");
         glance(grade.name);
+        switcher_close();
         sharables_load(schedule, grade);
         subjects_load(schedule.schedule, grade.subjects, "subjects", null);
         schedule_push_cookie(GRADE_COOKIE, grade.name);
@@ -292,4 +292,14 @@ function mobile_load(schedule) {
         tutorial.style.height = "100%";
         get("subjects").appendChild(tutorial);
     }
+}
+
+function switcher_open() {
+    show("grades");
+    get("subjects").style.height = "0";
+}
+
+function switcher_close() {
+    hide("grades");
+    get("subjects").style.height = "100%";
 }

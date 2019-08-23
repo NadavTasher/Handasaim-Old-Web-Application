@@ -33,6 +33,7 @@ html {
 }
 
 #home {
+    justify-content: start;
     direction: rtl;
 }
 
@@ -66,7 +67,7 @@ html {
 }
 
 #subjects {
-    height: 70vh;
+    height: 65vh;
     min-height: 60vh;
     max-height: 70vh;
 }
@@ -80,8 +81,9 @@ html {
     font-size: 200%;
 }
 
-#ui > * {
+#ui > img {
     max-height: 4vh;
+    margin: 0 .5vh;
     width: 100%;
 }
 
