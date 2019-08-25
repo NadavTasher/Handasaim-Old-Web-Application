@@ -121,6 +121,10 @@ html {
     height: 8vh;
 }
 
+.maximal {
+    min-height: fit-content;
+}
+
 .maximal > p {
     justify-content: start;
     margin: 2vh !important;
