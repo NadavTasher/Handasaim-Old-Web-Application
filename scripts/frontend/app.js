@@ -298,6 +298,11 @@ function mobile_load(schedule) {
         tutorial.style.color = "#FFFFFF";
         get("subjects").appendChild(tutorial);
     }
+
+    // Try iOS installation prompt
+    if (/iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) && !(("standalone" in window.navigator) && (window.navigator.standalone))) {
+        show("safari-prompt");
+    }
 }
 
 function switcher_open() {
