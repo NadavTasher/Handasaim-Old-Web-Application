@@ -27,9 +27,10 @@ html {
 }
 
 #message {
-    align-content: start;
-    align-self: baseline;
-    max-height: 100%;
+    align-content: normal;
+    align-items: normal;
+    align-self: stretch;
+    /*max-height: 100%;*/
     width: 100%;
 }
 
