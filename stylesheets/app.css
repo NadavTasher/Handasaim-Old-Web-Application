@@ -27,6 +27,8 @@ html {
 }
 
 #message {
+    /* WebKit Mobile Scrolling */
+    -webkit-overflow-scrolling: touch;
     align-content: normal;
     align-items: normal;
     align-self: stretch;
@@ -78,6 +80,8 @@ html {
 }
 
 #subjects {
+    /* WebKit Mobile Scrolling */
+    -webkit-overflow-scrolling: touch;
     height: 60vh;
     min-height: 60vh;
     max-height: 70vh;
