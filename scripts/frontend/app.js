@@ -1,6 +1,6 @@
 const DESKTOP_TIME_REFRESH_INTERVAL = 500;
 const DESKTOP_SCHEDULE_REFRESH_INTERVAL = 60 * 5 * 1000;
-const DESKTOP_SCROLL_INTERVAL = 20;
+const DESKTOP_SCROLL_INTERVAL = 2000;
 const DESKTOP_SCROLL_PAUSE_DURATION = 2 * 1000;
 const MESSAGE_REFRESH_INTERVAL = 5 * 1000;
 const GRADE_COOKIE = "grade";
@@ -251,18 +251,19 @@ function desktop_load() {
     get("subjects").setAttribute("mobile", false);
 
     // Scroll load
+    let scrollable = get("subjects");
+    let min = 0;
+    let max = scrollable.scrollHeight - parseInt(getComputedStyle(scrollable).height);
     let desktopScrollDirection = true, desktopScrollPaused = false;
+    let targetScroll = scrollable.scrollTop;
     setInterval(() => {
         if (!desktopScrollPaused) {
-            let previousTop = get("subjects").scrollTop;
-            get("subjects").scrollBy(0, desktopScrollDirection ? 1 : -10);
-            if (get("subjects").scrollTop === previousTop) {
-                desktopScrollPaused = true;
-                setTimeout(() => {
-                    desktopScrollPaused = false;
-                    desktopScrollDirection = !desktopScrollDirection;
-                }, DESKTOP_SCROLL_PAUSE_DURATION);
-            }
+            if (targetScroll >= max ||
+                targetScroll <= min)
+                desktopScrollDirection = !(targetScroll >= max);
+            let toAdd = (desktopScrollDirection ? 1 : -2) * max / 10;
+            targetScroll+=toAdd;
+            scrollable.scrollBy(0, toAdd);
         }
     }, DESKTOP_SCROLL_INTERVAL);
     let update = () => {
