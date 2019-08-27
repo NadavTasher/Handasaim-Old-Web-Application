@@ -110,9 +110,9 @@ function instruct(title = null, safaricheck = true, callback = null) {
         then.style.fontStyle = "italic";
         // Heights
         text.style.maxHeight = "5vh";
-        share.style.maxHeight = "5vh";
+        share.style.maxHeight = "4vh";
         then.style.maxHeight = "5vh";
-        add.style.maxHeight = "5vh";
+        add.style.maxHeight = "4vh";
         // Add components
         div.appendChild(text);
         div.appendChild(share);
