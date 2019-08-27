@@ -83,7 +83,10 @@ function grade_load(schedule, day, grade) {
         glance(grade.name);
         switcher_close();
         sharables_load(schedule, grade);
-        subjects_load(schedule.schedule, grade.subjects, "subjects", null);
+        transition("subjects", OUT, () => {
+            subjects_load(schedule.schedule, grade.subjects, "subjects", null);
+            transition("subjects", IN);
+        });
         schedule_push_cookie(GRADE_COOKIE, grade.name);
     }
 }
@@ -262,7 +265,7 @@ function desktop_load() {
                 targetScroll <= min)
                 desktopScrollDirection = !(targetScroll >= max);
             let toAdd = (desktopScrollDirection ? 1 : -2) * max / 10;
-            targetScroll+=toAdd;
+            targetScroll += toAdd;
             scrollable.scrollBy(0, toAdd);
         }
     }, DESKTOP_SCROLL_INTERVAL);
@@ -292,18 +295,38 @@ function mobile_load(schedule) {
             }
         }
     } else {
-        hide("glance");
-        let tutorial = make("p", "Select a class from above");
+        hide("dashboard");
+        hide("grades");
+        let tutorial = make("div");
+        let icon = make("img");
+        let text1 = make("p", "Welcome!");
+        let text2 = make("p", "This is the official schedule app for Handasaim High, Herzliya.");
+        let button = make("button", "Let's begin, shall we?");
         tutorial.style.height = "100%";
-        tutorial.style.fontSize = "10vh";
-        tutorial.style.color = "#FFFFFF";
+        text1.style.fontSize = "8vh";
+        text1.style.color = "#FFFFFF";
+        text1.style.direction = "ltr";
+        text1.style.margin = "2vh 0";
+        text2.style.fontSize = "4vh";
+        text2.style.color = "#FFFFFF";
+        text2.style.direction = "ltr";
+        text2.style.margin = "2vh 0";
+        icon.src = "resources/svg/icons/app/icon_transparent.svg";
+        icon.style.maxHeight = "20vh";
+        button.style.direction = "ltr";
+        button.onclick = () =>
+            transition(tutorial, OUT, () =>
+                grade_load(schedule, schedule.day, schedule.grades[0]));
+        tutorial.appendChild(icon);
+        tutorial.appendChild(text1);
+        tutorial.appendChild(text2);
+        tutorial.appendChild(button);
+        get("subjects").style.height = "100%";
         get("subjects").appendChild(tutorial);
+        transition(tutorial, IN);
     }
 
-    // Try iOS installation prompt
-    if (/iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase()) && !(("standalone" in window.navigator) && (window.navigator.standalone))) {
-        show("safari-prompt");
-    }
+    instruct();
 }
 
 function switcher_open() {
@@ -312,7 +335,7 @@ function switcher_open() {
 }
 
 function switcher_close() {
-    show("glance");
+    show("dashboard");
     hide("grades");
     get("subjects").style.height = "100%";
 }

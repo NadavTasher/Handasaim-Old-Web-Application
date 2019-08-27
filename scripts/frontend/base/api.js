@@ -69,6 +69,59 @@ function html(callback = null) {
     });
 }
 
+function instruct(title = null, safaricheck = true, callback = null) {
+    // Check user-agent
+    let agent = window.navigator.userAgent.toLowerCase();
+    let devices = ["iphone", "ipad", "ipod"];
+    let mobilesafari = false;
+    for (let i = 0; i < devices.length; i++) {
+        if (agent.includes(devices[i])) mobilesafari = true;
+    }
+    if ((mobilesafari && !("standalone" in window.navigator && window.navigator.standalone)) || !safaricheck) {
+        let div = make("div");
+        let text = make("p");
+        let share = make("img");
+        let then = make("p");
+        let add = make("img");
+        // Make the prompt horizontal and button-like
+        row(div);
+        input(div);
+        // OnClick
+        div.onclick = (callback !== null) ? callback : () => {
+            hide(div);
+            div.parentElement.removeChild(div);
+        };
+        // Div style
+        div.style.position = "fixed";
+        div.style.bottom = "0";
+        div.style.left = "0";
+        div.style.right = "0";
+        div.style.margin = "1vh";
+        div.style.padding = "1vh";
+        div.style.height = "6vh";
+        div.style.backgroundColor = "#ffffffee";
+        // Contents
+        text.innerText = "To add " + ((title === null) ? ("\"" + document.title + "\"") : title) + ", ";
+        share.src = "resources/svg/icons/safari/share.svg";
+        then.innerText = "then";
+        add.src = "resources/svg/icons/safari/add.svg";
+        // Indentations
+        text.style.fontStyle = "italic";
+        then.style.fontStyle = "italic";
+        // Heights
+        text.style.maxHeight = "5vh";
+        share.style.maxHeight = "5vh";
+        then.style.maxHeight = "5vh";
+        add.style.maxHeight = "5vh";
+        // Add components
+        div.appendChild(text);
+        div.appendChild(share);
+        div.appendChild(then);
+        div.appendChild(add);
+        document.body.appendChild(div);
+    }
+}
+
 function theme(color) {
     let meta = document.getElementsByTagName("meta")["theme-color"];
     if (meta !== null) {
@@ -130,11 +183,6 @@ function clear(v) {
     }
 }
 
-function column(v) {
-    get(v).setAttribute("column", "true");
-    get(v).setAttribute("row", "false");
-}
-
 function exists(v) {
     return get(v) !== undefined;
 }
@@ -171,11 +219,6 @@ function page(from, to, callback = null) {
         view(temporary);
         transition(to, IN, callback);
     });
-}
-
-function row(v) {
-    get(v).setAttribute("row", "true");
-    get(v).setAttribute("column", "false");
 }
 
 function show(v) {
@@ -217,6 +260,26 @@ function view(v) {
 
 function visible(v) {
     return (get(v).style.getPropertyValue("display") !== "none");
+}
+
+/* Special HTML */
+
+function column(v) {
+    get(v).setAttribute("column", true);
+    get(v).setAttribute("row", false);
+}
+
+function input(v) {
+    get(v).setAttribute("input", true);
+}
+
+function row(v) {
+    get(v).setAttribute("row", true);
+    get(v).setAttribute("column", false);
+}
+
+function text(v) {
+    get(v).setAttribute("text", true);
 }
 
 /* UI */
