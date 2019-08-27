@@ -83,10 +83,7 @@ function grade_load(schedule, day, grade) {
         glance(grade.name);
         switcher_close();
         sharables_load(schedule, grade);
-        transition("subjects", OUT, () => {
-            subjects_load(schedule.schedule, grade.subjects, "subjects", null);
-            transition("subjects", IN);
-        });
+        subjects_load(schedule.schedule, grade.subjects, "subjects", null);
         schedule_push_cookie(GRADE_COOKIE, grade.name);
     }
 }
