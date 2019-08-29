@@ -160,7 +160,7 @@ function sharables_load(schedule, grade, separator = "\n") {
             let current = schedule.grades[g];
             if (current.hasOwnProperty("grade") && grade.hasOwnProperty("grade")) {
                 if (current.grade === grade.grade) {
-                    complete += grade.name + separator;
+                    complete += current.name;
                     complete += export_grade(current, separator) + separator + separator;
                 }
             }
@@ -174,7 +174,7 @@ function sharables_load(schedule, grade, separator = "\n") {
             }
         }
     }
-    get("share-single").onclick = messaging_share(grade.name + separator + export_grade(grade, separator));
+    get("share-single").onclick = messaging_share(grade.name + export_grade(grade, separator));
     get("share-multiple").onclick = messaging_share(complete);
 }
 
