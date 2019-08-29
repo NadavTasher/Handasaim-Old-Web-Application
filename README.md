@@ -42,11 +42,18 @@ const DESTINATION_FILE = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARA
 const CONFIGURATION_FILE = __DIR__ . DIRECTORY_SEPARATOR . "configuration.json";
 const SCHEDULER_FILE = __DIR__ . DIRECTORY_SEPARATOR . "scheduler.jar";
 
-echo "Loading configuration...\n";
-$configuration = json_decode(file_get_contents(CONFIGURATION_FILE));
-echo "Lookup page: " . $configuration->lookup . "\n";
+$source = "";
+if (count($argv) < 2) {
+    echo "Loading configuration...\n";
+    $configuration = json_decode(file_get_contents(CONFIGURATION_FILE));
+    echo "Lookup page: " . $configuration->lookup . "\n";
+    $source = $configuration->lookup;
+} else {
+    $source = $argv[1];
+    echo "Source file: " . $source;
+}
 echo "Executing scheduler with destination file " . DESTINATION_FILE . "\n";
-shell_exec("java -jar ".SCHEDULER_FILE." ".$configuration->lookup." ".DESTINATION_FILE);
+shell_exec("java -jar " . SCHEDULER_FILE . " " . $source . " " . DESTINATION_FILE);
 echo "Done\n";
 ```
 
