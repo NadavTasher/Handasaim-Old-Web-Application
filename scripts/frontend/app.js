@@ -1,7 +1,4 @@
-const DESKTOP_TIME_REFRESH_INTERVAL = 500;
-const DESKTOP_SCHEDULE_REFRESH_INTERVAL = 60 * 5 * 1000;
-const DESKTOP_SCROLL_INTERVAL = 2000;
-const DESKTOP_SCROLL_PAUSE_DURATION = 2 * 1000;
+const DESKTOP_SCROLL_INTERVAL = 7000;
 const MESSAGE_REFRESH_INTERVAL = 5 * 1000;
 const GRADE_COOKIE = "grade";
 const
@@ -12,8 +9,6 @@ const ORIENTATION = screen.width > screen.height;
 const ORIENTATION_HORIZONTAL = true;
 const ORIENTATION_VERTICAL = false;
 
-let messageInterval;
-
 function load() {
     view("home");
     background_load(topColor, bottomColor);
@@ -22,7 +17,7 @@ function load() {
         grades_load(schedule, null);
         hide("ui");
         if (ORIENTATION === ORIENTATION_HORIZONTAL) {
-            desktop_load();
+            desktop_load(schedule);
         } else {
             mobile_load(schedule);
         }
@@ -57,8 +52,7 @@ function messages_load(schedule) {
                 }
             };
             next();
-            clearInterval(messageInterval);
-            messageInterval = setInterval(next, MESSAGE_REFRESH_INTERVAL);
+            setInterval(next, MESSAGE_REFRESH_INTERVAL);
             show("message");
         } else {
             hide("message");
@@ -244,7 +238,7 @@ function subjects_load(schedule, subjects, v, dayLength = null) {
     }
 }
 
-function desktop_load() {
+function desktop_load(schedule) {
 
     get("grades").setAttribute("mobile", false);
 
@@ -253,8 +247,9 @@ function desktop_load() {
 
     // Scroll load
     let scrollable = get("subjects");
+    let height = parseInt(getComputedStyle(scrollable).height);
     let min = 0;
-    let max = scrollable.scrollHeight - parseInt(getComputedStyle(scrollable).height);
+    let max = scrollable.scrollHeight - height;
     let desktopScrollDirection = true, desktopScrollPaused = false;
     let targetScroll = scrollable.scrollTop;
     setInterval(() => {
@@ -262,18 +257,15 @@ function desktop_load() {
             if (targetScroll >= max ||
                 targetScroll <= min)
                 desktopScrollDirection = !(targetScroll >= max);
-            let toAdd = (desktopScrollDirection ? 1 : -2) * max / 10;
+            let toAdd = (desktopScrollDirection ? 1 : -1) * height;
             targetScroll += toAdd;
             scrollable.scrollBy(0, toAdd);
         }
     }, DESKTOP_SCROLL_INTERVAL);
-    let update = () => {
+    setInterval(() => {
         let now = new Date();
         glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()));
-    };
-    setInterval(update, DESKTOP_TIME_REFRESH_INTERVAL);
-    setInterval(load, DESKTOP_SCHEDULE_REFRESH_INTERVAL);
-    update();
+    }, 500);
 }
 
 function mobile_load(schedule) {
