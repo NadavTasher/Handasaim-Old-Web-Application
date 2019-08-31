@@ -126,13 +126,13 @@ html {
     background-color: #ffffffee;
 }
 
-#safari-prompt>*{
+#safari-prompt > * {
     max-height: 6vh;
 }
 
 .padded {
     padding: 1vh;
-    margin: 1vh;
+    margin: 0.5vh;
 }
 
 .coasted {
@@ -142,12 +142,12 @@ html {
 }
 
 .minimal {
-    max-width: 8vh;
-    min-width: 8vh;
-    width: 8vh;
-    max-height: 8vh;
-    min-height: 8vh;
-    height: 8vh;
+    max-width: 7vh;
+    min-width: 7vh;
+    width: 7vh;
+    max-height: 7vh;
+    min-height: 7vh;
+    height: 7vh;
 }
 
 .maximal {
