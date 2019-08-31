@@ -90,7 +90,7 @@ $commands = [
     "git remote add origin " . $configuration->remote,
     "git add --all",
     "git commit --all -m 'Automated Last Resort Backup'",
-    "git push --all --force"
+    "git push ".$configuration->remote." --all --force"
 ];
 $command = "echo Starting";
 foreach ($commands as $c) {
@@ -104,7 +104,7 @@ echo "Done\n";
 
 ```json
 {
-  "remote": "https://github.com/HWBB/LastResort.git"
+  "remote": "https://username:password@github.com/HWBB/LastResort.git"
 }
 ```
 
@@ -114,8 +114,6 @@ Add this to your crontab:
 */5 * * * * php Root Directory/sources/scheduler/execute.php
 */10 * * * * php Root Directory/sources/backuper/execute.php
 ```
-
-Execute `php Root Directory/sources/backup/execute.php` and enter your credentials
 
 ### Instructions for installing on digital signage devices
 You will need to trigger the following command once, every login.
