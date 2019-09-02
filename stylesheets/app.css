@@ -103,8 +103,17 @@ html {
     height: 0 !important;
 }
 
+#glance>*{
+    padding: 0;
+    margin: 0.5vh;
+}
+
 #top {
     font-size: 8vh;
+}
+
+#bottom{
+    font-size: 3vh;
 }
 
 #ui > img {

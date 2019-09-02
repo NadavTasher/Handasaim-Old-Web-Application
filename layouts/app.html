@@ -8,11 +8,12 @@
         <p id="message">
         </p>
         <div id="glance" column>
-            <p id="top"></p>
+            <p id="top" onclick="switcher_open();"></p>
+            <p id="bottom"></p>
             <div id="ui" row>
+                <img id="refresh-page" src="resources/svg/icons/white/refresh.svg" onclick="window.location.reload(true);" alt="Reload"/>
                 <img id="share-single" src="resources/svg/icons/white/private_share.svg" alt="Private Share"/>
                 <img id="share-multiple" src="resources/svg/icons/white/public_share.svg" alt="Public Share"/>
-                <img id="grades-toggle" onclick="switcher_open();" src="resources/svg/icons/white/switch.svg" alt="Grade Switcher"/>
                 <img id="transit-shortcut" onclick="window.location = 'moovit://directions?dest_lat=32.164813&dest_lon=34.826688&dest_name=Handasaim High&partner_id=HandasaimWeb';"
                      src="resources/svg/icons/white/transit.svg"
                      alt="Transit Shortcut"/>

@@ -25,8 +25,9 @@ function load() {
 
 }
 
-function glance(top) {
+function glance(top, bottom) {
     get("top").innerText = top;
+    get("bottom").innerText = bottom;
 }
 
 function messages_load(schedule) {
@@ -74,7 +75,7 @@ function grade_load(schedule, day, grade) {
     if (grade.hasOwnProperty("name") &&
         grade.hasOwnProperty("subjects")) {
         show("ui");
-        glance(grade.name);
+        glance(grade.name, schedule_day(schedule.day));
         switcher_close();
         sharables_load(schedule, grade);
         subjects_load(schedule.schedule, grade.subjects, "subjects", null);
@@ -264,7 +265,7 @@ function desktop_load(schedule) {
     }, DESKTOP_SCROLL_INTERVAL);
     setInterval(() => {
         let now = new Date();
-        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()));
+        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), (now.getDay() + 1) + "/" + (now.getMonth() + 1) + "/" + now.getFullYear());
     }, 500);
 }
 
