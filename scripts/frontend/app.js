@@ -1,5 +1,6 @@
 const DESKTOP_SCROLL_INTERVAL = 7000;
 const MESSAGE_REFRESH_INTERVAL = 5 * 1000;
+const MILLISECONDS_TO_RELOAD = 60 * 1000 * 20;
 const GRADE_COOKIE = "grade";
 const
     bottomColor = "#00827E",
@@ -267,6 +268,7 @@ function desktop_load(schedule) {
         let now = new Date();
         glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), (now.getDay() + 1) + "/" + (now.getMonth() + 1) + "/" + now.getFullYear());
     }, 500);
+    setTimeout(() => window.location.reload(true), MILLISECONDS_TO_RELOAD);
 }
 
 function mobile_load(schedule) {
