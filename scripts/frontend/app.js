@@ -266,8 +266,8 @@ function desktop_load(schedule) {
     }, DESKTOP_SCROLL_INTERVAL);
     setInterval(() => {
         let now = new Date();
-        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), (now.getDay() + 1) + "/" + (now.getMonth() + 1) + "/" + now.getFullYear());
-    }, 500);
+        glance(now.getHours() + ":" + ((now.getMinutes() < 10) ? "0" + now.getMinutes() : now.getMinutes()), "");
+    }, 10000);
     setTimeout(() => window.location.reload(true), MILLISECONDS_TO_RELOAD);
 }
 
